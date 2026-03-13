@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BN Convent School — Fee Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* ══ PASTE YOUR WEB APP URL FROM APPS SCRIPT BELOW ══════════════ */
+/* See SETUP_GUIDE.html for instructions */
+
+:root {
+  --bg:#0a0e1a; --surface:#111827; --card:#1a2235; --border:#1e2d45;
+  --accent:#f59e0b; --accent2:#06b6d4; --accent3:#10b981;
+  --danger:#ef4444; --hostel:#8b5cf6; --text:#f1f5f9; --muted:#64748b; --subtle:#1e293b;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* API auto-connected */
+
+/* LOGIN */
+#login-screen{
+  display:flex;align-items:center;justify-content:center;min-height:100vh;
+  background:var(--bg);
+  background-image:radial-gradient(ellipse at 20% 50%,rgba(245,158,11,.08),transparent 60%),
+                   radial-gradient(ellipse at 80% 20%,rgba(6,182,212,.06),transparent 60%);
+  position:fixed;inset:0;z-index:100;transition:opacity .4s,visibility .4s;
+}
+#login-screen.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.login-box{
+  background:var(--card);border:1px solid var(--border);border-radius:20px;
+  padding:44px;width:420px;max-width:95vw;box-shadow:0 40px 80px rgba(0,0,0,.5);
+  animation:slideUp .5s ease;
+}
+@keyframes slideUp{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}
+.school-crest{text-align:center;margin-bottom:28px}
+.school-crest .icon{font-size:44px;display:block;margin-bottom:10px}
+.school-crest h1{font-family:'DM Serif Display',serif;font-size:21px;color:var(--text);line-height:1.3}
+.school-crest p{font-size:11px;color:var(--muted);margin-top:5px;letter-spacing:.06em;text-transform:uppercase}
+.login-divider{height:1px;background:var(--border);margin:22px 0}
+.role-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:22px}
+.role-tab{
+  padding:10px;border-radius:10px;border:1px solid var(--border);
+  background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;
+  font-size:13px;cursor:pointer;transition:all .2s;
+}
+.role-tab.active{background:var(--accent);border-color:var(--accent);color:#000;font-weight:700}
+.field-group{margin-bottom:14px}
+.field-group label{display:block;font-size:11px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em}
+.field-group input{
+  width:100%;padding:11px 14px;background:var(--subtle);border:1px solid var(--border);
+  border-radius:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;
+  transition:border-color .2s;outline:none;
+}
+.field-group input:focus{border-color:var(--accent)}
+.field-group input::placeholder{color:var(--muted)}
+.login-btn{
+  width:100%;padding:13px;background:var(--accent);border:none;border-radius:10px;
+  color:#000;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;
+  cursor:pointer;transition:all .2s;margin-top:6px;
+}
+.login-btn:hover{background:#fbbf24;transform:translateY(-1px);box-shadow:0 8px 20px rgba(245,158,11,.3)}
+.login-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.login-error{color:var(--danger);font-size:12px;text-align:center;margin-top:10px;display:none}
+.login-hint{font-size:11px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.7}
+.login-hint strong{color:var(--accent2)}
+
+/* APP */
+#app{display:none;min-height:100vh}
+
+/* TOPBAR */
+.topbar{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:0 22px;height:58px;display:flex;align-items:center;
+  justify-content:space-between;position:sticky;top:0;z-index:50;
+}
+.topbar-logo{font-family:'DM Serif Display',serif;font-size:18px}
+.topbar-logo span{color:var(--accent)}
+.role-badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.role-badge.admin{background:rgba(245,158,11,.15);color:var(--accent);border:1px solid rgba(245,158,11,.3)}
+.role-badge.student{background:rgba(6,182,212,.15);color:var(--accent2);border:1px solid rgba(6,182,212,.3)}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.user-name{font-size:12px;color:var(--muted)}
+.logout-btn{
+  padding:6px 12px;background:transparent;border:1px solid var(--border);
+  border-radius:8px;color:var(--muted);font-size:12px;cursor:pointer;
+  font-family:'DM Sans',sans-serif;transition:all .2s;
+}
+.logout-btn:hover{border-color:var(--danger);color:var(--danger)}
+
+/* NAV */
+.nav-tabs{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:0 22px;display:flex;gap:2px;overflow-x:auto;
+}
+.nav-tab{
+  padding:13px 16px;background:transparent;border:none;color:var(--muted);
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;
+  cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;
+}
+.nav-tab:hover{color:var(--text)}
+.nav-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* MAIN */
+.main{padding:24px;max-width:1400px;margin:0 auto}
+.page{display:none}
+.page.active{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* LOADER */
+.loader{text-align:center;padding:60px;color:var(--muted);font-size:14px}
+.spinner{
+  width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);
+  border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 16px;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:24px}
+.kpi-card{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:22px;position:relative;overflow:hidden;transition:transform .2s;
+}
+.kpi-card:hover{transform:translateY(-2px)}
+.kpi-card::before{content:'';position:absolute;top:0;right:0;width:70px;height:70px;border-radius:0 14px 0 70px;opacity:.1}
+.kpi-card.gold::before{background:var(--accent)}
+.kpi-card.cyan::before{background:var(--accent2)}
+.kpi-card.green::before{background:var(--accent3)}
+.kpi-card.purple::before{background:var(--hostel)}
+.kpi-icon{font-size:20px;margin-bottom:10px}
+.kpi-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px}
+.kpi-value{font-family:'DM Serif Display',serif;font-size:26px;color:var(--text)}
+.kpi-value.money{font-family:'JetBrains Mono',monospace;font-size:19px}
+.kpi-sub{font-size:11px;color:var(--muted);margin-top:3px}
+
+/* CHARTS */
+.charts-grid{display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-bottom:24px}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px}
+.chart-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.chart-title .dot{width:7px;height:7px;border-radius:50%}
+.chart-wrap{position:relative;height:190px}
+
+/* FEE BARS */
+.fee-bars{display:grid;gap:10px;margin-bottom:24px}
+.fee-bar-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
+.fee-bar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.fee-bar-label{font-size:13px;font-weight:500;color:var(--text)}
+.fee-bar-amount{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent)}
+.fee-bar-track{height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.fee-bar-fill{height:100%;border-radius:3px;transition:width 1.2s ease}
+
+/* TABLE */
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.table-toolbar{padding:14px 18px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.search-box{
+  flex:1;min-width:180px;padding:8px 13px;background:var(--subtle);
+  border:1px solid var(--border);border-radius:9px;color:var(--text);
+  font-family:'DM Sans',sans-serif;font-size:13px;outline:none;
+}
+.search-box:focus{border-color:var(--accent2)}
+.filter-select{
+  padding:8px 13px;background:var(--subtle);border:1px solid var(--border);
+  border-radius:9px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;cursor:pointer;
+}
+.hostel-toggle{
+  padding:7px 13px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;
+  border:1px solid rgba(139,92,246,.3);background:rgba(139,92,246,.1);
+  color:var(--hostel);font-family:'DM Sans',sans-serif;transition:all .2s;
+}
+.hostel-toggle.active{background:var(--hostel);color:white;border-color:var(--hostel)}
+.tcount{font-size:12px;color:var(--muted);margin-left:auto}
+table{width:100%;border-collapse:collapse}
+th{
+  padding:11px 14px;text-align:left;font-size:11px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.08em;color:var(--muted);
+  border-bottom:1px solid var(--border);background:var(--subtle);
+}
+td{
+  padding:11px 14px;font-size:13px;border-bottom:1px solid rgba(30,45,69,.5);
+  transition:background .15s;
+}
+tr:hover td{background:rgba(255,255,255,.02)}
+tr:last-child td{border-bottom:none}
+.cbadge{display:inline-block;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:600;background:rgba(6,182,212,.12);color:var(--accent2)}
+.htag{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:5px;font-size:11px;font-weight:600;background:rgba(139,92,246,.12);color:var(--hostel)}
+.ac{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent3)}
+.zc{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)}
+.pager{padding:11px 18px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);font-size:12px;color:var(--muted)}
+.pager-btns{display:flex;gap:6px}
+.pbtn{
+  padding:6px 12px;background:var(--subtle);border:1px solid var(--border);
+  border-radius:7px;color:var(--text);font-size:12px;cursor:pointer;
+  font-family:'DM Sans',sans-serif;transition:all .2s;
+}
+.pbtn:hover{border-color:var(--accent)}
+.pbtn:disabled{opacity:.3;cursor:not-allowed}
+
+/* SIBLINGS */
+.siblings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.sib-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;transition:transform .2s,border-color .2s}
+.sib-card:hover{transform:translateY(-2px);border-color:var(--accent2)}
+.sib-father{font-family:'DM Serif Display',serif;font-size:15px;margin-bottom:3px;display:flex;align-items:center;gap:8px}
+.sib-fc{font-size:11px;padding:2px 8px;border-radius:16px;background:rgba(6,182,212,.12);color:var(--accent2);font-family:'DM Sans',sans-serif}
+.sib-total{font-size:12px;color:var(--muted);margin-bottom:12px}
+.sib-children{display:grid;gap:7px}
+.sib-child{background:var(--subtle);border-radius:9px;padding:11px;display:flex;justify-content:space-between;align-items:center}
+.sib-child .cn{font-size:13px;font-weight:500}
+.sib-child .cm{font-size:11px;color:var(--muted);margin-top:2px}
+.sib-child .ct{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent3)}
+
+/* HOSTEL STATS */
+.hostel-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:22px}
+.hstat{background:linear-gradient(135deg,rgba(139,92,246,.13),rgba(139,92,246,.04));border:1px solid rgba(139,92,246,.25);border-radius:14px;padding:18px}
+.hstat .val{font-family:'JetBrains Mono',monospace;font-size:22px;color:var(--hostel);margin-bottom:3px}
+.hstat .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+
+/* STUDENT HISTORY VIEW */
+.hist-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px;margin-bottom:22px;text-align:center}
+.hist-box h2{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:6px}
+.hist-box p{font-size:13px;color:var(--muted);margin-bottom:18px}
+.hist-row{display:flex;gap:9px;max-width:460px;margin:0 auto}
+.hist-row input{flex:1;padding:11px 14px;background:var(--subtle);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none}
+.hist-row input:focus{border-color:var(--accent2)}
+.sbtn{padding:11px 18px;background:var(--accent2);border:none;border-radius:9px;color:#000;font-weight:700;font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer}
+.hist-result{display:none}
+.sprofile{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:18px}
+.sph{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+.spav{width:52px;height:52px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:20px;color:#000;flex-shrink:0}
+.spname{font-family:'DM Serif Display',serif;font-size:19px}
+.spmeta{font-size:12px;color:var(--muted);margin-top:3px}
+.fee-pills{display:flex;flex-wrap:wrap;gap:9px}
+.pill{padding:9px 14px;border-radius:9px;min-width:95px}
+.pill .pl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px}
+.pill .pv{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600}
+.pill.paid{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.18)}
+.pill.paid .pv{color:var(--accent3)}
+.pill.hostel{background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.18)}
+.pill.hostel .pv{color:var(--hostel)}
+.pill.total{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.18)}
+.pill.total .pv{color:var(--accent);font-size:15px}
+.sib-notice{background:rgba(6,182,212,.06);border:1px solid rgba(6,182,212,.18);border-radius:11px;padding:14px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px}
+.sib-notice .ni{font-size:18px;flex-shrink:0}
+.sib-notice .nt{font-size:12px;font-weight:600;color:var(--accent2);margin-bottom:3px}
+.sib-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px}
+.chip{padding:3px 9px;background:rgba(6,182,212,.1);border-radius:5px;font-size:11px;color:var(--accent2)}
+.receipt-list{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px}
+.ritem{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.ritem:last-child{border-bottom:none}
+.rno{font-size:11px;color:var(--muted);margin-bottom:2px}
+.rtype{font-size:13px;font-weight:500}
+.rdate{font-size:11px;color:var(--muted);margin-top:2px}
+.ramt{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--accent3);font-weight:600}
+.empty{text-align:center;padding:36px;color:var(--muted);font-size:13px}
+
+/* SECTION HDR */
+.shdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.stitle{font-family:'DM Serif Display',serif;font-size:20px}
+.ssub{font-size:12px;color:var(--muted)}
+
+@media(max-width:768px){
+  .charts-grid{grid-template-columns:1fr}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .main{padding:14px}
+}
+
+/* ── FORMS ── */
+.form-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px}
+.form-section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.fg{display:flex;flex-direction:column;position:relative}
+.fl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}
+.req{color:var(--danger)}
+.fi{padding:10px 13px;background:var(--subtle);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color .2s;-webkit-appearance:none}
+.fi:focus{border-color:var(--accent2);background:rgba(6,182,212,.04)}
+.fi::placeholder{color:var(--muted)}
+.fi option{background:var(--card);color:var(--text)}
+.fee-total-bar{display:flex;justify-content:space-between;align-items:center;background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);border-radius:12px;padding:14px 20px;margin-top:16px}
+.fee-total-bar span:first-child{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.form-btn{padding:11px 22px;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.form-btn.primary{background:var(--accent3);color:#000}
+.form-btn.primary:hover{background:#0ea96e;transform:translateY(-1px)}
+.form-btn.primary:disabled{opacity:.5;transform:none;cursor:not-allowed}
+.form-btn.blue{background:var(--accent2);color:#000}
+.form-btn.blue:hover{background:#0ea5c9;transform:translateY(-1px)}
+.form-btn.secondary{background:var(--subtle);color:var(--muted);border:1px solid var(--border)}
+.form-btn.secondary:hover{border-color:var(--danger);color:var(--danger)}
+</style>
+</head>
+<body>
+
+<!-- API connected -->
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="school-crest">
+      <span class="icon">🏫</span>
+      <h1>BN Convent Higher Secondary School</h1>
+      <p>Wadrafnagar, Balrampur · Session 2025-26</p>
+    </div>
+    <div class="login-divider" style="height:1px;background:var(--border);margin:20px 0"></div>
+    <div class="role-tabs">
+      <button class="role-tab active" onclick="setRole('admin')" id="tab-admin">🔐 Admin</button>
+      <button class="role-tab" onclick="setRole('student')" id="tab-student">👤 Student / Parent</button>
+    </div>
+    <div id="admin-fields">
+      <div class="field-group"><label>Username</label><input id="uname" type="text" placeholder="admin" autocomplete="off"/></div>
+      <div class="field-group"><label>Password</label><input id="upass" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+    </div>
+    <div id="student-fields" style="display:none">
+      <div class="field-group"><label>Your Name or Father's Name</label><input id="student-name-input" type="text" placeholder="e.g. Himanshu or Shivkumar Gurjar" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+    </div>
+    <button class="login-btn" id="login-btn" onclick="doLogin()">Sign In →</button>
+    <div class="login-error" id="login-error"></div>
+    <div class="login-hint" id="login-hint">Demo: <strong>admin / school@2025</strong></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="topbar-logo">BN<span> Convent</span></div>
+      <div class="role-badge" id="role-badge">Admin</div>
+    </div>
+    <div class="topbar-right">
+      <span class="user-name" id="user-display"></span>
+      <button class="logout-btn" onclick="doLogout()">Logout</button>
+    </div>
+  </div>
+  <div class="nav-tabs" id="nav-tabs"></div>
+  <div class="main">
+    <div class="page" id="page-dashboard"></div>
+    <div class="page" id="page-students"></div>
+    <div class="page" id="page-hostel"></div>
+    <div class="page" id="page-siblings"></div>
+    <div class="page" id="page-register"></div>
+    <div class="page" id="page-admit"></div>
+    <div class="page" id="page-feepay"></div>
+    <div class="page" id="page-history"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════════════════════════════
+let SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbynfGWZTUn0JYfwoU5AodDSK1YLPE3huPQGRtiPDucyHwfqpjocv3T6mQkBZoc87V_F/exec';
+let SESSION_TOKEN = '';
+let CURRENT_ROLE = 'admin';
+let CURRENT_USER = '';
+let studentQuery = '';
+
+// Charts
+let chartMonthly = null, chartDonut = null;
+// Pagination
+let stuPage = 0, regPage = 0;
+let stuData = [], regData = [];
+let hostelOnly = false;
+
+// API URL hardcoded — no setup needed
+
+// ═══════════════════════════════════════════════════════════════════
+// API HELPER
+// ═══════════════════════════════════════════════════════════════════
+async function api(params) {
+  if (!SCRIPT_URL) {
+    // Demo mode — return fake success for login
+    return demoHandler(params);
+  }
+  const url = SCRIPT_URL + '?' + new URLSearchParams(params).toString();
+  try {
+    const res  = await fetch(url);
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    return data;
+  } catch(e) {
+    console.error('API error:', e);
+    throw e;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// DEMO MODE (works without backend — uses embedded data)
+// ═══════════════════════════════════════════════════════════════════
+const DEMO_STUDENTS = [{"name":"Himanshu Gurjar","father":"Shivkumar Gurjar","class":"4th","total":14000,"admission":10000,"tuition":0,"school":4000,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Amrendra Gurjar","father":"Kanshiram Gurjar","class":"5th","total":1500,"admission":1500,"tuition":0,"school":0,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Angad Kumar","father":"Mohan Pyare","class":"12th","total":4000,"admission":0,"tuition":4000,"school":0,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Arti","father":"Bramhdev","class":"5th","total":10000,"admission":0,"tuition":0,"school":10000,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Suraj Dhurve","father":"Dharmpal","class":"UKG","total":2000,"admission":2000,"tuition":0,"school":0,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Arjun Yadav","father":"Devnath Yadav","class":"7th","total":26000,"admission":6000,"tuition":0,"school":0,"hostel":20000,"stationary":0,"other":0,"hasHostel":true},{"name":"Prince Gupta","father":"Ratnesh Kumar","class":"7th","total":20000,"admission":10000,"tuition":0,"school":0,"hostel":10000,"stationary":0,"other":0,"hasHostel":true},{"name":"Ashutosh Paikara","father":"Vinod Kumar","class":"9th","total":17500,"admission":3500,"tuition":0,"school":0,"hostel":14000,"stationary":0,"other":0,"hasHostel":true},{"name":"Mansh Singh","father":"Ramvichar","class":"8th","total":20000,"admission":10000,"tuition":0,"school":0,"hostel":10000,"stationary":0,"other":0,"hasHostel":true},{"name":"Pritam Gupta","father":"Umashankar Gupta","class":"6th","total":5000,"admission":5000,"tuition":0,"school":0,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Saroj","father":"Umashankar Gupta","class":"7th","total":5000,"admission":0,"tuition":0,"school":5000,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Supriya Yadav","father":"Suresh Yadav","class":"8th","total":3000,"admission":3000,"tuition":0,"school":0,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Satyam Yadav","father":"Suresh Yadav","class":"6th","total":5000,"admission":0,"tuition":5000,"school":0,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Pooja","father":"Suresh Yadav","class":"5th","total":20000,"admission":0,"tuition":0,"school":0,"hostel":20000,"stationary":0,"other":0,"hasHostel":true},{"name":"Rishu Kurre","father":"Krishnlal Kurre","class":"7th","total":1000,"admission":1000,"tuition":0,"school":0,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Paridhi","father":"Krishnlal Kurre","class":"1st","total":500,"admission":500,"tuition":0,"school":0,"hostel":0,"stationary":0,"other":0,"hasHostel":false}];
+const DEMO_RECORDS = [{"rno":"201","date":"2025-06-03","name":"Himanshu Gurjar","father":"Shivkumar Gurjar","class":"4th","fee_type":"Admission Fee","amount":1500,"pay_mode":"Cash","recv_by":"Parmeshwar"},{"rno":"202","date":"2025-06-03","name":"Amrendra Gurjar","father":"Kanshiram Gurjar","class":"5th","fee_type":"Admission Fee","amount":1500,"pay_mode":"Cash","recv_by":"Parmeshwar"},{"rno":"203","date":"2025-06-03","name":"Angad Kumar","father":"Mohan Pyare","class":"12th","fee_type":"Tuition Fee","amount":4000,"pay_mode":"Cash","recv_by":"Parmeshwar"},{"rno":"204","date":"2025-06-03","name":"Arti","father":"Bramhdev","class":"5th","fee_type":"School Fee","amount":10000,"pay_mode":"Cash","recv_by":"Parmeshwar"},{"rno":"205","date":"2025-06-04","name":"Suraj Dhurve","father":"Dharmpal","class":"UKG","fee_type":"Admission Fee","amount":2000,"pay_mode":"Cash","recv_by":"Chandrasen Yadav"},{"rno":"210","date":"2025-07-10","name":"Arjun Yadav","father":"Devnath Yadav","class":"7th","fee_type":"Hostel Fee","amount":20000,"pay_mode":"PhonePe","recv_by":"Parmeshwar"},{"rno":"211","date":"2025-07-11","name":"Prince Gupta","father":"Ratnesh Kumar","class":"7th","fee_type":"Hostel Fee","amount":10000,"pay_mode":"Cash","recv_by":"Roshni"}];
+const DEMO_MONTHLY = {"2025-06":97500,"2025-07":132000,"2025-08":83500,"2025-09":75500,"2025-10":14000,"2025-11":10000,"2025-12":45000,"2026-01":113500,"2026-02":153000,"2026-03":57000};
+const DEMO_FEE_TOTALS = {"Admission Fee":195500,"Tuition Fee":76500,"School Fee":203500,"Hostel Fee":315500};
+const DEMO_SUMMARY = {totalStudents:94,hostelStudents:22,totalCollected:791000,hostelCollected:315500,admissionCollected:195500,tuitionCollected:76500,schoolCollected:203500};
+
+function demoHandler(params) {
+  const action = params.action;
+  if (action === 'login') {
+    if (params.role === 'admin') {
+      if (params.username === 'admin' && params.password === 'school@2025')
+        return {success:true,role:'admin',token:'ADMIN_DEMO_TOKEN',user:'Administrator'};
+      return {success:false,error:'Invalid credentials'};
+    }
+    const q = (params.studentName||'').toLowerCase();
+    const matched = DEMO_STUDENTS.filter(s=>s.name.toLowerCase().includes(q)||s.father.toLowerCase().includes(q));
+    if (!matched.length) return {success:false,error:'No student found'};
+    return {success:true,role:'student',user:matched[0].name,studentQuery:q};
+  }
+  if (action === 'getDashboard') return {summary:DEMO_SUMMARY,feeTotals:DEMO_FEE_TOTALS,monthly:DEMO_MONTHLY};
+  if (action === 'getStudents') {
+    let s = [...DEMO_STUDENTS];
+    const q=(params.search||'').toLowerCase();
+    if(q) s=s.filter(x=>x.name.toLowerCase().includes(q)||x.father.toLowerCase().includes(q));
+    if(params.cls) s=s.filter(x=>x.class===params.cls);
+    if(params.hostelOnly==='true') s=s.filter(x=>x.hasHostel);
+    return {students:s};
+  }
+  if (action === 'getHostelStudents') return {students:DEMO_STUDENTS.filter(s=>s.hasHostel).map(s=>({...s,payModes:'Cash'}))};
+  if (action === 'getSiblings') {
+    const families = buildFamilyGroupsJS(DEMO_STUDENTS);
+    return {families};
+  }
+  if (action === 'getFeeRegister') {
+    let r=[...DEMO_RECORDS];
+    const q=(params.search||'').toLowerCase();
+    if(q) r=r.filter(x=>x.name.toLowerCase().includes(q)||x.rno.includes(q));
+    if(params.feeType) r=r.filter(x=>x.fee_type===params.feeType);
+    return {records:r,total:r.length,page:0,pageSize:25};
+  }
+  if (action === 'getStudentHistory') {
+    const q=(params.query||'').toLowerCase();
+    const matched=DEMO_STUDENTS.filter(s=>s.name.toLowerCase().includes(q)||s.father.toLowerCase().includes(q)||(s.mother||'').toLowerCase().includes(q));
+    return {students:matched.map(s=>({
+      ...s,
+      receipts:DEMO_RECORDS.filter(r=>r.name===s.name).map(r=>({receiptNo:r.rno,date:r.date,feeType:r.fee_type,amount:r.amount,payMode:r.pay_mode})),
+      siblings:DEMO_STUDENTS.filter(x=>{
+        if(x.name===s.name) return false;
+        const fM=s.father&&x.father&&s.father.toLowerCase()===x.father.toLowerCase();
+        const mM=s.mother&&x.mother&&s.mother.toLowerCase()===x.mother.toLowerCase();
+        return fM||mM;
+      }).map(x=>({name:x.name,class:x.class}))
+    }))};
+  }
+  if (action === 'addStudent') {
+    // Demo: pretend success
+    return {success:true, message:'Student "'+params.studentName+'" registered successfully (demo mode — connect Google Sheets to save permanently)'};
+  }
+  if (action === 'addFeeEntry') {
+    return {success:true, rowsAdded:1, receiptNo:params.receiptNo, message:'Fee entry saved (demo mode — connect Google Sheets to save permanently)'};
+  }
+  if (action === 'getLastReceiptNo') {
+    const maxRno = Math.max(...DEMO_RECORDS.map(r=>parseInt(r.rno)||0), 200);
+    return { lastReceiptNo: maxRno, nextReceiptNo: maxRno + 1 };
+  }
+  if (action === 'checkDuplicateReceipt') {
+    const byRno = DEMO_RECORDS.filter(r=>r.rno===params.receiptNo);
+    if (byRno.length) return {duplicate:true, type:'receiptNo', message:'Receipt #'+params.receiptNo+' already exists for: '+byRno[0].name};
+    if (params.studentName && params.feeType && params.feeType!=='Other') {
+      const existing = DEMO_RECORDS.filter(r=>r.name===params.studentName && r.fee_type===params.feeType);
+      if (existing.length) return {duplicate:true, type:'studentFee', message:params.studentName+' already paid '+params.feeType+' (Receipt #'+existing[0].rno+')'};
+    }
+    return {duplicate:false};
+  }
+  return {error:'Unknown action in demo mode'};
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════════════════════════════
+function setRole(r) {
+  CURRENT_ROLE = r;
+  document.getElementById('tab-admin').classList.toggle('active', r==='admin');
+  document.getElementById('tab-student').classList.toggle('active', r==='student');
+  document.getElementById('admin-fields').style.display = r==='admin'?'':'none';
+  document.getElementById('student-fields').style.display = r==='student'?'':'none';
+  document.getElementById('login-hint').style.display = r==='admin'?'':'none';
+}
+
+async function doLogin() {
+  const btn = document.getElementById('login-btn');
+  const err = document.getElementById('login-error');
+  err.style.display = 'none';
+  btn.disabled = true; btn.textContent = 'Signing in…';
+  try {
+    let params;
+    if (CURRENT_ROLE === 'admin') {
+      params = {action:'login',role:'admin',username:document.getElementById('uname').value.trim(),password:document.getElementById('upass').value.trim()};
+    } else {
+      params = {action:'login',role:'student',studentName:document.getElementById('student-name-input').value.trim()};
+    }
+    const res = await api(params);
+    if (res.success) {
+      SESSION_TOKEN = res.token || '';
+      CURRENT_USER  = res.user;
+      studentQuery  = res.studentQuery || '';
+      launchApp(res.role);
+    } else {
+      err.textContent = res.error || 'Login failed';
+      err.style.display = 'block';
+    }
+  } catch(e) {
+    err.textContent = 'Connection error: ' + e.message;
+    err.style.display = 'block';
+  }
+  btn.disabled = false; btn.textContent = 'Sign In →';
+}
+
+function doLogout() {
+  SESSION_TOKEN = ''; CURRENT_USER = ''; stuPage=0; regPage=0;
+  if(chartMonthly){chartMonthly.destroy();chartMonthly=null;}
+  if(chartDonut){chartDonut.destroy();chartDonut=null;}
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('upass').value='';
+  document.getElementById('login-error').style.display='none';
+}
+
+function launchApp(role) {
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('app').style.display='block';
+  document.getElementById('role-badge').textContent = role==='admin'?'Admin':'Student';
+  document.getElementById('role-badge').className = 'role-badge '+role;
+  document.getElementById('user-display').textContent = CURRENT_USER;
+  buildNav(role);
+  if (role==='admin') showPage('dashboard');
+  else { showPage('history'); if(studentQuery) setTimeout(()=>{document.getElementById('hist-input').value=studentQuery;searchHistory();},200); }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// NAV
+// ═══════════════════════════════════════════════════════════════════
+function buildNav(role) {
+  const pages = role==='admin'
+    ? [{id:'dashboard',l:'📊 Dashboard'},{id:'students',l:'👥 Students'},{id:'hostel',l:'🏠 Hostel'},{id:'siblings',l:'👨‍👧‍👦 Siblings'},{id:'register',l:'📋 Fee Register'},{id:'admit',l:'➕ Admit Student'},{id:'feepay',l:'💳 Collect Fee'}]
+    : [{id:'history',l:'📄 My Fee History'}];
+  document.getElementById('nav-tabs').innerHTML = pages.map(p=>
+    `<button class="nav-tab" onclick="showPage('${p.id}')" id="nav-${p.id}">${p.l}</button>`
+  ).join('');
+}
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id)?.classList.add('active');
+  document.getElementById('nav-'+id)?.classList.add('active');
+  if(id==='dashboard') loadDashboard();
+  if(id==='students')  loadStudents();
+  if(id==='hostel')    loadHostel();
+  if(id==='siblings')  loadSiblings();
+  if(id==='register')  loadRegister();
+  if(id==='admit')     loadAdmitPage();
+  if(id==='feepay')    loadFeePayPage();
+  if(id==='history')   renderHistoryPage();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════════════════════
+async function loadDashboard() {
+  const el = document.getElementById('page-dashboard');
+  el.innerHTML = loader();
+  try {
+    const d = await api({action:'getDashboard',token:SESSION_TOKEN});
+    renderDashboard(d);
+  } catch(e) { el.innerHTML = errorBox(e.message); }
+}
+
+function renderDashboard(d) {
+  const s = d.summary, ft = d.feeTotals, mo = d.monthly;
+  const total = s.totalCollected;
+  const el = document.getElementById('page-dashboard');
+  el.innerHTML = `
+  <div class="kpi-grid">
+    ${kpi('👥','Total Students',s.totalStudents,'Enrolled 2025-26','cyan',false)}
+    ${kpi('💰','Total Collected','₹'+fmt(total),'All fee types','gold',true)}
+    ${kpi('🏠','Hostel Students',s.hostelStudents,'With hostel fee','purple',false)}
+    ${kpi('🛏️','Hostel Revenue','₹'+fmt(s.hostelCollected),'Hostel total','purple',true)}
+    ${kpi('📚','School Fee','₹'+fmt(s.schoolCollected),'Session total','green',true)}
+    ${kpi('📝','Admission Fee','₹'+fmt(s.admissionCollected),'New admissions','cyan',true)}
+  </div>
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title"><span class="dot" style="background:var(--accent)"></span>Monthly Fee Collection</div>
+      <div class="chart-wrap"><canvas id="chart-monthly"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title"><span class="dot" style="background:var(--accent2)"></span>Fee Type Breakdown</div>
+      <div class="chart-wrap"><canvas id="chart-donut"></canvas></div>
+    </div>
+  </div>
+  <div class="fee-bars">
+    ${Object.entries(ft).map(([k,v])=>`
+    <div class="fee-bar-item">
+      <div class="fee-bar-header"><span class="fee-bar-label">${k}</span><span class="fee-bar-amount">₹${fmt(v)}</span></div>
+      <div class="fee-bar-track"><div class="fee-bar-fill" style="width:${(v/total*100).toFixed(1)}%;background:${feeColor(k)}"></div></div>
+      <div style="font-size:11px;color:var(--muted);margin-top:5px">${(v/total*100).toFixed(1)}% of total collection</div>
+    </div>`).join('')}
+  </div>`;
+
+  // Monthly chart
+  const months = Object.keys(mo);
+  const vals   = Object.values(mo);
+  const ctx1 = document.getElementById('chart-monthly').getContext('2d');
+  if(chartMonthly) chartMonthly.destroy();
+  chartMonthly = new Chart(ctx1,{type:'bar',data:{
+    labels:months.map(m=>{const[y,mo2]=m.split('-');return ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+mo2]+"'"+(y.slice(2))}),
+    datasets:[{data:vals,backgroundColor:vals.map((_,i)=>`hsl(${200+i*14},65%,55%)`),borderRadius:6,borderSkipped:false}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'₹'+fmt(c.parsed.y)}}},
+    scales:{x:{grid:{color:'rgba(255,255,255,.03)'},ticks:{color:'#64748b',font:{size:10}}},
+            y:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#64748b',font:{size:10},callback:v=>'₹'+fmt(v)}}}}});
+
+  // Donut
+  const ctx2 = document.getElementById('chart-donut').getContext('2d');
+  if(chartDonut) chartDonut.destroy();
+  chartDonut = new Chart(ctx2,{type:'doughnut',data:{
+    labels:Object.keys(ft),
+    datasets:[{data:Object.values(ft),backgroundColor:['#f59e0b','#06b6d4','#10b981','#8b5cf6'],borderWidth:0,hoverOffset:6}]
+  },options:{responsive:true,maintainAspectRatio:false,cutout:'64%',
+    plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',font:{size:11},padding:12}},
+             tooltip:{callbacks:{label:c=>c.label+': ₹'+fmt(c.raw)}}}}});
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// STUDENTS TABLE
+// ═══════════════════════════════════════════════════════════════════
+const PAGE_SZ = 20;
+let allClasses = [];
+
+function renderStudentsPage() {
+  document.getElementById('page-students').innerHTML = `
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <input class="search-box" id="stu-search" placeholder="Search by name or father…" oninput="debounce(loadStudents,400)()"/>
+      <select class="filter-select" id="stu-class" onchange="loadStudents()">
+        <option value="">All Classes</option>
+        ${allClasses.map(c=>`<option>${c}</option>`).join('')}
+      </select>
+      <button class="hostel-toggle ${hostelOnly?'active':''}" id="hostel-tog" onclick="toggleHostel()">🏠 Hostel Only</button>
+      <span class="tcount" id="stu-count"></span>
+    </div>
+    <div style="overflow-x:auto"><table>
+      <thead><tr><th>#</th><th>Student Name</th><th>Father's Name</th><th>Class</th><th>Admission</th><th>Tuition</th><th>School</th><th>Hostel</th><th>Other</th><th>Total Paid</th></tr></thead>
+      <tbody id="stu-tbody"></tbody>
+    </table></div>
+    <div class="pager">
+      <span id="stu-pinfo"></span>
+      <div class="pager-btns">
+        <button class="pbtn" onclick="stuPage--;loadStudents()" id="stu-prev">← Prev</button>
+        <button class="pbtn" onclick="stuPage++;loadStudents()" id="stu-next">Next →</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+async function loadStudents() {
+  if (!document.getElementById('stu-tbody')) renderStudentsPage();
+  const search = document.getElementById('stu-search')?.value||'';
+  const cls    = document.getElementById('stu-class')?.value||'';
+  try {
+    const d = await api({action:'getStudents',token:SESSION_TOKEN,search,cls,hostelOnly:hostelOnly?'true':'false',page:stuPage});
+    stuData = d.students || [];
+    if (!allClasses.length) {
+      allClasses = [...new Set(stuData.map(s=>s.class))].sort(classOrd);
+      renderStudentsPage();
+    }
+    const start = stuPage*PAGE_SZ, slice = stuData.slice(start,start+PAGE_SZ);
+    document.getElementById('stu-count').textContent = stuData.length+' student(s)';
+    document.getElementById('stu-pinfo').textContent = `Showing ${start+1}–${Math.min(start+PAGE_SZ,stuData.length)} of ${stuData.length}`;
+    document.getElementById('stu-prev').disabled = stuPage===0;
+    document.getElementById('stu-next').disabled = start+PAGE_SZ>=stuData.length;
+    document.getElementById('stu-tbody').innerHTML = slice.map((s,i)=>`<tr>
+      <td style="color:var(--muted);font-size:11px">${start+i+1}</td>
+      <td><div style="font-weight:500">${s.name}</div>${s.hasHostel?'<div class="htag" style="margin-top:3px">🏠 Hostel</div>':''}</td>
+      <td style="color:var(--muted)">${s.father}</td>
+      <td><span class="cbadge">${s.class}</span></td>
+      <td class="${s.admission>0?'ac':'zc'}">${s.admission>0?'₹'+fmt(s.admission):'—'}</td>
+      <td class="${s.tuition>0?'ac':'zc'}">${s.tuition>0?'₹'+fmt(s.tuition):'—'}</td>
+      <td class="${s.school>0?'ac':'zc'}">${s.school>0?'₹'+fmt(s.school):'—'}</td>
+      <td class="${s.hostel>0?'ac':'zc'}" style="${s.hostel>0?'color:var(--hostel)':''}">${s.hostel>0?'₹'+fmt(s.hostel):'—'}</td>
+      <td class="${s.other>0?'ac':'zc'}">${s.other>0?'₹'+fmt(s.other):'—'}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--accent)">₹${fmt(s.total)}</td>
+    </tr>`).join('');
+  } catch(e) { document.getElementById('page-students').innerHTML=errorBox(e.message); }
+}
+
+function toggleHostel() {
+  hostelOnly=!hostelOnly; stuPage=0;
+  document.getElementById('hostel-tog')?.classList.toggle('active',hostelOnly);
+  loadStudents();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// HOSTEL
+// ═══════════════════════════════════════════════════════════════════
+async function loadHostel() {
+  const el = document.getElementById('page-hostel');
+  el.innerHTML = loader();
+  try {
+    const d = await api({action:'getHostelStudents',token:SESSION_TOKEN});
+    const ss = d.students || [];
+    const totalH = ss.reduce((a,s)=>a+s.hostel,0);
+    const avg = ss.length ? totalH/ss.length : 0;
+    const clsDist = {};
+    ss.forEach(s=>{clsDist[s.class]=(clsDist[s.class]||0)+1;});
+    const topCls = Object.entries(clsDist).sort((a,b)=>b[1]-a[1])[0];
+
+    el.innerHTML = `
+    <div class="hostel-stats">
+      <div class="hstat"><div class="val">${ss.length}</div><div class="lbl">Total Hostel Students</div></div>
+      <div class="hstat"><div class="val">₹${fmt(totalH)}</div><div class="lbl">Total Hostel Collected</div></div>
+      <div class="hstat"><div class="val">₹${fmt(Math.round(avg))}</div><div class="lbl">Average per Student</div></div>
+      <div class="hstat"><div class="val">${topCls?topCls[0]:'—'}</div><div class="lbl">Top Class</div></div>
+    </div>
+    <div class="shdr"><div><div class="stitle">Hostel Students</div><div class="ssub">All ${ss.length} students paying hostel fee</div></div></div>
+    <div class="table-wrap">
+      <div style="overflow-x:auto"><table>
+        <thead><tr><th>#</th><th>Student Name</th><th>Father</th><th>Class</th><th>Hostel Fee</th><th>School Fee</th><th>Total Paid</th><th>Pay Mode</th></tr></thead>
+        <tbody>${ss.map((s,i)=>`<tr>
+          <td style="color:var(--muted);font-size:11px">${i+1}</td>
+          <td style="font-weight:500">${s.name}</td>
+          <td style="color:var(--muted)">${s.father}</td>
+          <td><span class="cbadge">${s.class}</span></td>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--hostel);font-weight:700">₹${fmt(s.hostel)}</td>
+          <td class="${s.school>0?'ac':'zc'}">${s.school>0?'₹'+fmt(s.school):'—'}</td>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--accent)">₹${fmt(s.total)}</td>
+          <td style="font-size:11px;color:var(--muted)">${s.payModes||'Cash'}</td>
+        </tr>`).join('')}</tbody>
+      </table></div>
+    </div>`;
+  } catch(e) { el.innerHTML = errorBox(e.message); }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// SIBLINGS
+// ═══════════════════════════════════════════════════════════════════
+async function loadSiblings() {
+  const el = document.getElementById('page-siblings');
+  el.innerHTML = loader();
+  try {
+    const d = await api({action:'getSiblings',token:SESSION_TOKEN});
+    const families = d.families || [];
+    el.innerHTML = `
+    <div class="shdr"><div><div class="stitle">Sibling Families</div><div class="ssub">${families.length} families with multiple children — grouped by matching father <strong>or</strong> mother name</div></div></div>
+    <div class="siblings-grid">${families.map(f=>`
+      <div class="sib-card">
+        <div class="sib-father">${f.father}<span class="sib-fc">${f.count} children</span></div>
+        ${f.mother?`<div style="font-size:12px;color:var(--muted);margin-bottom:2px">Mother: ${f.mother}</div>`:''}
+        <div class="sib-total">Family total: ₹${fmt(f.familyTotal)}</div>
+        <div class="sib-children">${f.children.map(c=>`
+          <div class="sib-child">
+            <div><div class="cn">${c.name}</div><div class="cm">Class ${c.class}${c.hasHostel?' · 🏠 Hostel':''}</div></div>
+            <div class="ct">₹${fmt(c.total)}</div>
+          </div>`).join('')}
+        </div>
+      </div>`).join('')}
+    </div>`;
+  } catch(e) { el.innerHTML = errorBox(e.message); }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// FEE REGISTER
+// ═══════════════════════════════════════════════════════════════════
+function renderRegisterPage() {
+  document.getElementById('page-register').innerHTML = `
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <input class="search-box" id="reg-search" placeholder="Search by name or receipt #…" oninput="debounce(loadRegister,400)()"/>
+      <select class="filter-select" id="reg-feetype" onchange="regPage=0;loadRegister()">
+        <option value="">All Fee Types</option>
+        <option>Admission Fee</option><option>Tuition Fee</option><option>School Fee</option>
+        <option>Hostel Fee</option><option>Stationary Charge</option><option>Other</option>
+      </select>
+      <span class="tcount" id="reg-count"></span>
+    </div>
+    <div style="overflow-x:auto"><table>
+      <thead><tr><th>Receipt</th><th>Date</th><th>Student</th><th>Father</th><th>Class</th><th>Fee Type</th><th>Amount</th><th>Mode</th><th>Received By</th></tr></thead>
+      <tbody id="reg-tbody"></tbody>
+    </table></div>
+    <div class="pager">
+      <span id="reg-pinfo"></span>
+      <div class="pager-btns">
+        <button class="pbtn" onclick="regPage--;loadRegister()" id="reg-prev">← Prev</button>
+        <button class="pbtn" onclick="regPage++;loadRegister()" id="reg-next">Next →</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+const FCLRS = {'Hostel Fee':'var(--hostel)','Admission Fee':'var(--accent)','School Fee':'var(--accent3)','Tuition Fee':'var(--accent2)'};
+
+async function loadRegister() {
+  if (!document.getElementById('reg-tbody')) renderRegisterPage();
+  const search  = document.getElementById('reg-search')?.value||'';
+  const feeType = document.getElementById('reg-feetype')?.value||'';
+  try {
+    const d = await api({action:'getFeeRegister',token:SESSION_TOKEN,search,feeType,page:regPage});
+    const recs=d.records||[], tot=d.total||recs.length;
+    const start=regPage*PAGE_SZ;
+    document.getElementById('reg-count').textContent=tot+' record(s)';
+    document.getElementById('reg-pinfo').textContent=`Showing ${start+1}–${Math.min(start+PAGE_SZ,tot)} of ${tot}`;
+    document.getElementById('reg-prev').disabled=regPage===0;
+    document.getElementById('reg-next').disabled=start+PAGE_SZ>=tot;
+    const fld = r=>r.fee_type||r.feeType||'';
+    const amt  = r=>r.amount||0;
+    const mode = r=>r.pay_mode||r.payMode||'';
+    const recv = r=>r.recv_by||r.receivedBy||'';
+    document.getElementById('reg-tbody').innerHTML=recs.map(r=>`<tr>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">#${r.rno||r.receiptNo}</td>
+      <td style="font-size:12px;color:var(--muted)">${r.date}</td>
+      <td style="font-weight:500">${r.name||r.studentName}</td>
+      <td style="color:var(--muted);font-size:12px">${r.father||r.fatherName}</td>
+      <td><span class="cbadge">${r.class}</span></td>
+      <td><span style="font-size:12px;color:${FCLRS[fld(r)]||'var(--text)'}">${fld(r)}</span></td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent3);font-weight:600">₹${fmt(amt(r))}</td>
+      <td style="font-size:11px;color:var(--muted)">${mode(r)}</td>
+      <td style="font-size:11px;color:var(--muted)">${recv(r)}</td>
+    </tr>`).join('');
+  } catch(e) { document.getElementById('page-register').innerHTML=errorBox(e.message); }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// STUDENT HISTORY
+// ═══════════════════════════════════════════════════════════════════
+function renderHistoryPage() {
+  const el = document.getElementById('page-history');
+  if (el.innerHTML.includes('hist-box')) return;
+  el.innerHTML = `
+  <div class="hist-box">
+    <h2>Fee Payment History</h2>
+    <p>Enter your name or father's name to view all fee receipts</p>
+    <div class="hist-row">
+      <input type="text" id="hist-input" placeholder="Student name or Father's name…" onkeydown="if(event.key==='Enter')searchHistory()"/>
+      <button class="sbtn" onclick="searchHistory()">Search</button>
+    </div>
+  </div>
+  <div id="hist-result" style="display:none"></div>`;
+}
+
+async function searchHistory() {
+  const q = document.getElementById('hist-input')?.value.trim();
+  if (!q) return;
+  const el = document.getElementById('hist-result');
+  el.style.display='block'; el.innerHTML=loader();
+  try {
+    const d = await api({action:'getStudentHistory',query:q});
+    const students = d.students||[];
+    if (!students.length) { el.innerHTML='<div class="empty">No student found for "'+q+'". Please check spelling.</div>'; return; }
+
+    let html='';
+    students.forEach(s=>{
+      const initials=s.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+      if(s.siblings&&s.siblings.length>0){
+        html+=`<div class="sib-notice">
+          <div class="ni">👨‍👧‍👦</div>
+          <div>
+            <div class="nt">Family account — Father: ${s.father}${s.mother?' · Mother: '+s.mother:''}</div>
+            <div style="font-size:12px;color:var(--muted)">Other children found in same family (matched by father or mother name):</div>
+            <div class="sib-chips">${s.siblings.map(x=>`<span class="chip">${x.name} · Class ${x.class}</span>`).join('')}</div>
+          </div>
+        </div>`;
+      }
+      html+=`<div class="sprofile">
+        <div class="sph">
+          <div class="spav">${initials}</div>
+          <div><div class="spname">${s.name}</div><div class="spmeta">Father: ${s.father} &nbsp;·&nbsp; Class ${s.class}${s.hasHostel?' &nbsp;·&nbsp; 🏠 Hostel':''}</div></div>
+        </div>
+        <div class="fee-pills">
+          ${s.admission>0?`<div class="pill paid"><div class="pl">Admission</div><div class="pv">₹${fmt(s.admission)}</div></div>`:''}
+          ${s.tuition>0?`<div class="pill paid"><div class="pl">Tuition</div><div class="pv">₹${fmt(s.tuition)}</div></div>`:''}
+          ${s.school>0?`<div class="pill paid"><div class="pl">School Fee</div><div class="pv">₹${fmt(s.school)}</div></div>`:''}
+          ${s.hostel>0?`<div class="pill hostel"><div class="pl">Hostel</div><div class="pv">₹${fmt(s.hostel)}</div></div>`:''}
+          <div class="pill total"><div class="pl">Total Paid</div><div class="pv">₹${fmt(s.total)}</div></div>
+        </div>
+      </div>
+      <div class="receipt-list">
+        ${(s.receipts||[]).length===0
+          ? '<div class="empty">No payment records found.</div>'
+          : (s.receipts||[]).map(r=>`<div class="ritem">
+              <div><div class="rno">Receipt #${r.receiptNo} · ${r.payMode}</div><div class="rtype">${r.feeType}</div><div class="rdate">${r.date}</div></div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <div class="ramt">₹${fmt(r.amount)}</div>
+                <button onclick="printReceipt(${JSON.stringify(r).replace(/"/g,'&quot;')},${JSON.stringify(s).replace(/"/g,'&quot;')})" style="padding:5px 10px;background:rgba(6,182,212,.15);border:1px solid rgba(6,182,212,.3);border-radius:7px;color:var(--accent2);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap">🖨 Print</button>
+              </div>
+            </div>`).join('')}
+      </div><div style="margin-bottom:20px"></div>`;
+    });
+    el.innerHTML=html;
+  } catch(e){ el.innerHTML=errorBox(e.message); }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// ADMIT STUDENT PAGE
+// ═══════════════════════════════════════════════════════════════════
+function loadAdmitPage() {
+  document.getElementById('page-admit').innerHTML = `
+  <div style="max-width:680px;margin:0 auto">
+    <div class="shdr" style="margin-bottom:20px">
+      <div><div class="stitle">Admit New Student</div><div class="ssub">Register a student into Student Master</div></div>
+    </div>
+    <div class="form-card" id="admit-card">
+      <div class="form-section-title">👤 Student Information</div>
+      <div class="form-grid">
+        <div class="fg"><label class="fl">Student Full Name <span class="req">*</span></label>
+          <input class="fi" id="ad-name" type="text" placeholder="e.g. Rahul Kumar"/></div>
+        <div class="fg"><label class="fl">Father's Name <span class="req">*</span></label>
+          <input class="fi" id="ad-father" type="text" placeholder="e.g. Suresh Kumar"/></div>
+        <div class="fg"><label class="fl">Mother's Name</label>
+          <input class="fi" id="ad-mother" type="text" placeholder="e.g. Sunita Devi"/></div>
+        <div class="fg"><label class="fl">Class <span class="req">*</span></label>
+          <select class="fi" id="ad-class">
+            <option value="">Select Class</option>
+            <option>Nursery</option><option>LKG</option><option>UKG</option>
+            <option>1st</option><option>2nd</option><option>3rd</option><option>4th</option>
+            <option>5th</option><option>6th</option><option>7th</option><option>8th</option>
+            <option>9th</option><option>10th</option><option>11th</option><option>12th</option>
+          </select></div>
+        <div class="fg"><label class="fl">Date of Birth</label>
+          <input class="fi" id="ad-dob" type="date"/></div>
+        <div class="fg"><label class="fl">Gender</label>
+          <select class="fi" id="ad-gender">
+            <option value="">Select</option><option>Male</option><option>Female</option><option>Other</option>
+          </select></div>
+        <div class="fg"><label class="fl">Mobile No.</label>
+          <input class="fi" id="ad-mobile" type="tel" placeholder="Parent mobile number"/></div>
+        <div class="fg"><label class="fl">Admission Date <span class="req">*</span></label>
+          <input class="fi" id="ad-date" type="date"/></div>
+      </div>
+      <div class="form-section-title" style="margin-top:20px">🏠 Hostel & Address</div>
+      <div class="form-grid">
+        <div class="fg"><label class="fl">Hostel</label>
+          <select class="fi" id="ad-hostel">
+            <option value="No">No (Day Scholar)</option><option value="Yes">Yes (Hosteller)</option>
+          </select></div>
+        <div class="fg"><label class="fl">Village / Address</label>
+          <input class="fi" id="ad-address" type="text" placeholder="Village, District"/></div>
+        <div class="fg" style="grid-column:1/-1"><label class="fl">Notes / Remarks</label>
+          <input class="fi" id="ad-notes" type="text" placeholder="Any special notes"/></div>
+      </div>
+      <div id="admit-msg" style="display:none;margin-top:16px"></div>
+      <div style="display:flex;gap:12px;margin-top:24px">
+        <button class="form-btn primary" onclick="submitAdmit()">✅ Register Student</button>
+        <button class="form-btn secondary" onclick="clearAdmit()">🗑 Clear Form</button>
+      </div>
+    </div>
+  </div>`;
+  // set today as default admission date
+  document.getElementById('ad-date').value = new Date().toISOString().slice(0,10);
+}
+
+async function submitAdmit() {
+  const name   = document.getElementById('ad-name').value.trim();
+  const father = document.getElementById('ad-father').value.trim();
+  const cls    = document.getElementById('ad-class').value;
+  const date   = document.getElementById('ad-date').value;
+  const msg    = document.getElementById('admit-msg');
+
+  if (!name)  { showFormMsg('admit-msg','error','Please enter Student Name'); return; }
+  if (!father){ showFormMsg('admit-msg','error','Please enter Father\'s Name'); return; }
+  if (!cls)   { showFormMsg('admit-msg','error','Please select Class'); return; }
+  if (!date)  { showFormMsg('admit-msg','error','Please select Admission Date'); return; }
+
+  const btn = document.querySelector('#admit-card .form-btn.primary');
+  btn.disabled=true; btn.textContent='Registering…';
+
+  try {
+    const d = await api({
+      action:'addStudent', token:SESSION_TOKEN,
+      studentName:name, fatherName:father, motherName:document.getElementById('ad-mother').value.trim(),
+      class:cls, dob:document.getElementById('ad-dob').value,
+      gender:document.getElementById('ad-gender').value,
+      mobile:document.getElementById('ad-mobile').value.trim(),
+      admissionDate:date, hostel:document.getElementById('ad-hostel').value,
+      address:document.getElementById('ad-address').value.trim(),
+      notes:document.getElementById('ad-notes').value.trim(),
+    });
+    if (d.success) {
+      showFormMsg('admit-msg','success','✅ '+name+' registered successfully!');
+      clearAdmit();
+    } else {
+      showFormMsg('admit-msg','error','❌ '+(d.error||'Registration failed'));
+    }
+  } catch(e) { showFormMsg('admit-msg','error','❌ '+e.message); }
+  btn.disabled=false; btn.textContent='✅ Register Student';
+}
+
+function clearAdmit() {
+  ['ad-name','ad-father','ad-mother','ad-mobile','ad-address','ad-notes'].forEach(id=>document.getElementById(id).value='');
+  ['ad-class','ad-gender'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('ad-hostel').value='No';
+  document.getElementById('ad-date').value=new Date().toISOString().slice(0,10);
+  document.getElementById('ad-dob').value='';
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// FEE COLLECTION FORM PAGE
+// ═══════════════════════════════════════════════════════════════════
+let feeFormReceipt = { data: null };
+
+async function loadFeePayPage() {
+  // fetch last receipt no from live API
+  let nextRno = 201;
+  try {
+    const d = await api({action:'getLastReceiptNo'});
+    nextRno = d.nextReceiptNo || (Math.max(...DEMO_RECORDS.map(r=>parseInt(r.rno)||0), 200) + 1);
+  } catch(e) {
+    nextRno = Math.max(...DEMO_RECORDS.map(r=>parseInt(r.rno)||0), 200) + 1;
+  }
+  const today = new Date().toISOString().slice(0,10);
+
+  document.getElementById('page-feepay').innerHTML = `
+  <div style="max-width:740px;margin:0 auto">
+    <div class="shdr" style="margin-bottom:20px">
+      <div><div class="stitle">Collect Fee</div><div class="ssub">Fill the form and generate a printable receipt</div></div>
+    </div>
+    <div class="form-card" id="fee-form-card">
+      <div class="form-section-title">🧾 Receipt Details</div>
+      <div class="form-grid">
+        <div class="fg"><label class="fl">Receipt No. <span class="req">*</span></label>
+          <input class="fi" id="ff-rno" type="number" value="${nextRno}" onblur="checkReceiptNoDuplicate(this.value)"/>
+          <div id="rno-warn" style="display:none;font-size:11px;margin-top:4px;color:#fca5a5"></div></div>
+        <div class="fg"><label class="fl">Date <span class="req">*</span></label>
+          <input class="fi" id="ff-date" type="date" value="${today}"/></div>
+      </div>
+      <div class="form-section-title" style="margin-top:20px">👤 Student Details</div>
+      <div class="form-grid">
+        <div class="fg"><label class="fl">Student Name <span class="req">*</span></label>
+          <input class="fi" id="ff-name" type="text" placeholder="Type to search…" oninput="suggestStudents(this.value)"/>
+          <div id="ff-suggest" style="display:none;position:absolute;z-index:99;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-top:4px;max-height:180px;overflow-y:auto;width:100%;box-shadow:0 8px 24px rgba(0,0,0,.4)"></div>
+          <div style="position:relative"></div>
+        </div>
+        <div class="fg"><label class="fl">Father's Name</label>
+          <input class="fi" id="ff-father" type="text" placeholder="Auto-filled on student select"/></div>
+        <div class="fg"><label class="fl">Class</label>
+          <select class="fi" id="ff-class">
+            <option value="">Select</option>
+            <option>Nursery</option><option>LKG</option><option>UKG</option>
+            <option>1st</option><option>2nd</option><option>3rd</option><option>4th</option>
+            <option>5th</option><option>6th</option><option>7th</option><option>8th</option>
+            <option>9th</option><option>10th</option><option>11th</option><option>12th</option>
+          </select></div>
+        <div class="fg"><label class="fl">Mobile No.</label>
+          <input class="fi" id="ff-mobile" type="tel" placeholder=""/></div>
+      </div>
+      <div class="form-section-title" style="margin-top:20px">💰 Fee Amounts</div>
+      <div class="form-grid">
+        <div class="fg"><label class="fl">Admission Fee (₹)</label>
+          <input class="fi" id="ff-admission" type="number" min="0" placeholder="0" oninput="updateFeeTotal()"/></div>
+        <div class="fg"><label class="fl">Tuition Fee (₹)</label>
+          <input class="fi" id="ff-tuition" type="number" min="0" placeholder="0" oninput="updateFeeTotal()"/></div>
+        <div class="fg"><label class="fl">School Fee (₹)</label>
+          <input class="fi" id="ff-school" type="number" min="0" placeholder="0" oninput="updateFeeTotal()"/></div>
+        <div class="fg"><label class="fl">Hostel Fee (₹)</label>
+          <input class="fi" id="ff-hostel" type="number" min="0" placeholder="0" oninput="updateFeeTotal()"/></div>
+        <div class="fg"><label class="fl">Stationary (₹)</label>
+          <input class="fi" id="ff-stationary" type="number" min="0" placeholder="0" oninput="updateFeeTotal()"/></div>
+        <div class="fg"><label class="fl">Other (₹)</label>
+          <input class="fi" id="ff-other" type="number" min="0" placeholder="0" oninput="updateFeeTotal()"/></div>
+      </div>
+      <div class="fee-total-bar">
+        <span>Total Amount</span>
+        <span id="ff-total" style="font-family:'JetBrains Mono',monospace;font-size:20px;color:var(--accent)">₹0</span>
+      </div>
+      <div class="form-grid" style="margin-top:16px">
+        <div class="fg"><label class="fl">Payment Mode <span class="req">*</span></label>
+          <select class="fi" id="ff-paymode">
+            <option>Cash</option><option>PhonePe</option><option>A/C Transfer</option>
+            <option>CRGB</option><option>SBI Transfer</option><option>Other</option>
+          </select></div>
+        <div class="fg"><label class="fl">Received By <span class="req">*</span></label>
+          <select class="fi" id="ff-recvby">
+            <option>Parmeshwar</option><option>Chandrasen Yadav</option><option>Roshni</option>
+            <option>Pathak Sir</option><option>Other</option>
+          </select></div>
+        <div class="fg" style="grid-column:1/-1"><label class="fl">Amount in Words</label>
+          <input class="fi" id="ff-inwords" type="text" placeholder="e.g. Five Thousand Rupees Only"/></div>
+        <div class="fg" style="grid-column:1/-1"><label class="fl">Remarks</label>
+          <input class="fi" id="ff-remarks" type="text" placeholder="Optional remarks"/></div>
+      </div>
+      <div id="feepay-msg" style="display:none;margin-top:14px"></div>
+      <div style="display:flex;gap:12px;margin-top:22px;flex-wrap:wrap">
+        <button class="form-btn primary" onclick="submitFeeEntry()">💾 Save & Generate Receipt</button>
+        <button class="form-btn blue" id="ff-print-btn" onclick="printFeeReceipt()" style="display:none">🖨 Print Receipt</button>
+        <button class="form-btn secondary" onclick="clearFeeForm()">🗑 Clear</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function suggestStudents(q) {
+  const box = document.getElementById('ff-suggest');
+  if (!q || q.length < 2) { box.style.display='none'; return; }
+  const matches = DEMO_STUDENTS.filter(s=>s.name.toLowerCase().includes(q.toLowerCase())||s.father.toLowerCase().includes(q.toLowerCase())).slice(0,6);
+  if (!matches.length) { box.style.display='none'; return; }
+  box.style.display='block';
+  box.innerHTML = matches.map(s=>`
+    <div onclick="selectStudent(${JSON.stringify(s).replace(/"/g,'&quot;')})"
+         style="padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .15s"
+         onmouseover="this.style.background='rgba(255,255,255,.05)'" onmouseout="this.style.background=''">
+      <div style="font-weight:500;font-size:13px">${s.name}</div>
+      <div style="font-size:11px;color:var(--muted)">${s.father} · Class ${s.class}</div>
+    </div>`).join('');
+  // reposition under input
+  const inp = document.getElementById('ff-name');
+  box.style.width = inp.offsetWidth+'px';
+  const rect = inp.getBoundingClientRect();
+  box.style.top = (rect.bottom + window.scrollY + 4)+'px';
+  box.style.left = rect.left+'px';
+  box.style.position = 'fixed';
+}
+
+function selectStudent(s) {
+  document.getElementById('ff-name').value   = s.name;
+  document.getElementById('ff-father').value = s.father;
+  const sel = document.getElementById('ff-class');
+  for(let i=0;i<sel.options.length;i++) if(sel.options[i].value===s.class){sel.selectedIndex=i;break;}
+  document.getElementById('ff-suggest').style.display='none';
+}
+
+document.addEventListener('click', e=>{ const b=document.getElementById('ff-suggest'); if(b&&!b.contains(e.target)&&e.target.id!=='ff-name') b.style.display='none'; });
+
+function updateFeeTotal() {
+  const ids=['ff-admission','ff-tuition','ff-school','ff-hostel','ff-stationary','ff-other'];
+  const total=ids.reduce((a,id)=>a+(parseFloat(document.getElementById(id)?.value)||0),0);
+  const el=document.getElementById('ff-total');
+  if(el) el.textContent='₹'+fmt(total);
+}
+
+// ── FAMILY GROUPING (JS version mirrors Code.gs logic) ────────────
+function buildFamilyGroupsJS(students) {
+  const groups = {};
+  students.forEach(s => {
+    const fKey = (s.father||'').trim().toLowerCase();
+    const mKey = (s.mother||'').trim().toLowerCase();
+    let matched = null;
+    for (const key of Object.keys(groups)) {
+      const rep  = groups[key][0];
+      const repF = (rep.father||'').trim().toLowerCase();
+      const repM = (rep.mother||'').trim().toLowerCase();
+      if ((fKey && repF && fKey===repF)||(mKey && repM && mKey===repM)) { matched=key; break; }
+    }
+    if (matched) { groups[matched].push(s); }
+    else { const nk=fKey||mKey||s.name; if(!groups[nk])groups[nk]=[]; groups[nk].push(s); }
+  });
+  return Object.values(groups)
+    .filter(ss=>ss.length>1)
+    .sort((a,b)=>b.length-a.length)
+    .map(children=>({
+      father:children[0].father||'—', mother:children[0].mother||'',
+      count:children.length,
+      familyTotal:children.reduce((a,c)=>a+c.total,0),
+      children
+    }));
+}
+
+// ── RECEIPT NO LIVE DUPLICATE CHECK ───────────────────────────────
+async function checkReceiptNoDuplicate(rno) {
+  if (!rno) return;
+  const warn = document.getElementById('rno-warn');
+  if (!warn) return;
+  try {
+    const d = await api({action:'checkDuplicateReceipt', token:SESSION_TOKEN, receiptNo:rno});
+    if (d.duplicate && d.type==='receiptNo') {
+      warn.style.display='block';
+      warn.textContent='⚠️ '+d.message;
+      document.getElementById('ff-rno').style.borderColor='var(--danger)';
+    } else {
+      warn.style.display='none';
+      document.getElementById('ff-rno').style.borderColor='';
+    }
+  } catch(e) { /* silent fail */ }
+}
+
+async function submitFeeEntry() {
+  const name   = document.getElementById('ff-name').value.trim();
+  const rno    = document.getElementById('ff-rno').value.trim();
+  const date   = document.getElementById('ff-date').value;
+  const cls    = document.getElementById('ff-class').value;
+  const feeIds = ['ff-admission','ff-tuition','ff-school','ff-hostel','ff-stationary','ff-other'];
+  const feeKeys= ['admission','tuition','school','hostel','stationary','other'];
+  const feeNames=['Admission Fee','Tuition Fee','School Fee','Hostel Fee','Stationary Charge','Other'];
+  const total  = feeIds.reduce((a,id)=>a+(parseFloat(document.getElementById(id)?.value)||0),0);
+
+  if (!rno)    { showFormMsg('feepay-msg','error','Please enter Receipt Number'); return; }
+  if (!date)   { showFormMsg('feepay-msg','error','Please select Date'); return; }
+  if (!name)   { showFormMsg('feepay-msg','error','Please enter Student Name'); return; }
+  if (total<=0){ showFormMsg('feepay-msg','error','Please enter at least one fee amount'); return; }
+
+  const btn=document.querySelector('#fee-form-card .form-btn.primary');
+  btn.disabled=true; btn.textContent='Checking duplicates…';
+
+  // ── Pre-save duplicate check ──────────────────────────────────
+  try {
+    // 1. Check receipt no duplicate
+    const rnoCheck = await api({action:'checkDuplicateReceipt', token:SESSION_TOKEN, receiptNo:rno});
+    if (rnoCheck.duplicate && rnoCheck.type==='receiptNo') {
+      const proceed = confirm('⚠️ Duplicate Receipt No!\n\n'+rnoCheck.message+'\n\nDo you want to proceed anyway?');
+      if (!proceed) { btn.disabled=false; btn.textContent='💾 Save & Generate Receipt'; return; }
+    }
+    // 2. Check each fee type for duplicate payment
+    const feeAmounts = feeIds.map((id,i)=>({name:feeNames[i],val:parseFloat(document.getElementById(id)?.value)||0}));
+    const paidFees   = feeAmounts.filter(f=>f.val>0 && f.name!=='Other');
+    const dupWarnings = [];
+    for (const fee of paidFees) {
+      const fc = await api({action:'checkDuplicateReceipt', token:SESSION_TOKEN, receiptNo:'__skip__', studentName:name, feeType:fee.name});
+      if (fc.duplicate && fc.type==='studentFee') dupWarnings.push(fc.message);
+    }
+    if (dupWarnings.length > 0) {
+      const proceed = confirm('⚠️ Possible Duplicate Payment!\n\n'+dupWarnings.join('\n')+'\n\nThis student may have already paid these fees.\nDo you want to save anyway?');
+      if (!proceed) { btn.disabled=false; btn.textContent='💾 Save & Generate Receipt'; return; }
+    }
+  } catch(e) { /* if check fails, allow save to continue */ }
+
+  btn.textContent='Saving…';
+
+  const payload = {
+    action:'addFeeEntry', token:SESSION_TOKEN,
+    receiptNo:rno, date, studentName:name,
+    fatherName:document.getElementById('ff-father').value.trim(),
+    class:cls,
+    mobile:document.getElementById('ff-mobile').value.trim(),
+    payMode:document.getElementById('ff-paymode').value,
+    receivedBy:document.getElementById('ff-recvby').value,
+    inWords:document.getElementById('ff-inwords').value.trim(),
+    remarks:document.getElementById('ff-remarks').value.trim(),
+  };
+  feeKeys.forEach((k,i)=>payload[k]=(parseFloat(document.getElementById(feeIds[i])?.value)||0));
+
+  try {
+    const d = await api(payload);
+    if (d.success||d.rowsAdded) {
+      showFormMsg('feepay-msg','success','✅ Fee saved! Receipt #'+rno+' generated.');
+      feeFormReceipt.data = {...payload, total};
+      document.getElementById('ff-print-btn').style.display='inline-flex';
+    } else {
+      showFormMsg('feepay-msg','error','❌ '+(d.error||'Save failed'));
+    }
+  } catch(e){ showFormMsg('feepay-msg','error','❌ '+e.message); }
+  btn.disabled=false; btn.textContent='💾 Save & Generate Receipt';
+}
+
+function clearFeeForm() {
+  ['ff-name','ff-father','ff-mobile','ff-inwords','ff-remarks'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  ['ff-admission','ff-tuition','ff-school','ff-hostel','ff-stationary','ff-other'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  const t=document.getElementById('ff-total'); if(t) t.textContent='₹0';
+  const pb=document.getElementById('ff-print-btn'); if(pb) pb.style.display='none';
+  feeFormReceipt.data=null;
+  document.getElementById('feepay-msg').style.display='none';
+}
+
+function printFeeReceipt() {
+  const d = feeFormReceipt.data;
+  if (!d) return;
+  openReceiptPrint({
+    receiptNo: d.receiptNo, date: d.date,
+    studentName: d.studentName, fatherName: d.fatherName, class: d.class,
+    feeType: 'Multiple', amount: d.total, payMode: d.payMode,
+    feeBreakdown: {
+      'Admission Fee': d.admission||0, 'Tuition Fee': d.tuition||0,
+      'School Fee': d.school||0, 'Hostel Fee': d.hostel||0,
+      'Stationary': d.stationary||0, 'Other': d.other||0,
+    },
+    inWords: d.inWords, receivedBy: d.receivedBy, remarks: d.remarks,
+  }, null);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// RECEIPT PRINT (shared by history + fee form)
+// ═══════════════════════════════════════════════════════════════════
+function printReceipt(r, s) {
+  openReceiptPrint({
+    receiptNo: r.receiptNo, date: r.date,
+    studentName: s.name, fatherName: s.father, class: s.class,
+    feeType: r.feeType, amount: r.amount, payMode: r.payMode,
+    feeBreakdown: null, inWords:'', receivedBy:'', remarks:'',
+  }, s);
+}
+
+function openReceiptPrint(r, s) {
+  const breakdown = r.feeBreakdown
+    ? Object.entries(r.feeBreakdown).filter(([,v])=>v>0).map(([k,v])=>`
+        <tr><td style="padding:7px 12px;border-bottom:1px solid #e5e7eb">${k}</td>
+            <td style="padding:7px 12px;border-bottom:1px solid #e5e7eb;text-align:right;font-weight:600">₹${Number(v).toLocaleString('en-IN')}</td></tr>`).join('')
+    : `<tr><td style="padding:7px 12px;border-bottom:1px solid #e5e7eb">${r.feeType}</td>
+           <td style="padding:7px 12px;border-bottom:1px solid #e5e7eb;text-align:right;font-weight:600">₹${Number(r.amount).toLocaleString('en-IN')}</td></tr>`;
+  const total = r.feeBreakdown ? Object.values(r.feeBreakdown).reduce((a,v)=>a+v,0) : r.amount;
+
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <title>Receipt #${r.receiptNo}</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:Arial,sans-serif;background:#fff;color:#111;padding:20px}
+    .receipt{max-width:580px;margin:0 auto;border:2px solid #1e3a5f;border-radius:8px;overflow:hidden}
+    .header{background:#1e3a5f;color:white;text-align:center;padding:18px 16px}
+    .header h1{font-size:20px;font-weight:bold;margin-bottom:3px}
+    .header p{font-size:12px;opacity:.85}
+    .receipt-badge{background:#f59e0b;color:#000;text-align:center;padding:8px;font-size:13px;font-weight:bold;letter-spacing:.05em}
+    .body{padding:18px}
+    .row{display:flex;justify-content:space-between;margin-bottom:10px;font-size:13px}
+    .row .label{color:#6b7280;font-size:12px}
+    .row .val{font-weight:600;font-size:14px}
+    table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
+    thead th{background:#f3f4f6;padding:8px 12px;text-align:left;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:#6b7280}
+    .total-row td{padding:10px 12px;background:#1e3a5f;color:white;font-weight:bold;font-size:15px}
+    .total-row td:last-child{text-align:right}
+    .footer{border-top:2px dashed #e5e7eb;margin-top:18px;padding-top:16px;display:flex;justify-content:space-between;font-size:12px;color:#6b7280}
+    .sig{border-top:1px solid #9ca3af;padding-top:6px;margin-top:30px;font-size:11px;text-align:center}
+    .cut{text-align:center;padding:10px;font-size:11px;color:#9ca3af;border-top:2px dashed #d1d5db;border-bottom:2px dashed #d1d5db;margin:16px 0;letter-spacing:.05em}
+    @media print{body{padding:0}.no-print{display:none}html{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  </style></head><body>
+  <div class="no-print" style="text-align:center;margin-bottom:16px">
+    <button onclick="window.print()" style="padding:10px 28px;background:#1e3a5f;color:white;border:none;border-radius:8px;font-size:14px;font-weight:bold;cursor:pointer;margin-right:10px">🖨 Print Receipt</button>
+    <button onclick="window.close()" style="padding:10px 20px;background:#f3f4f6;border:1px solid #d1d5db;border-radius:8px;font-size:14px;cursor:pointer">✕ Close</button>
+  </div>
+  <!-- MAIN RECEIPT -->
+  <div class="receipt">
+    <div class="header">
+      <h1>B.N. CONVENT HIGHER SECONDARY SCHOOL</h1>
+      <p>Wadrafnagar, Balrampur – 497225 &nbsp;|&nbsp; Contact: 9826278578</p>
+    </div>
+    <div class="receipt-badge">FEE RECEIPT — SESSION 2025-26</div>
+    <div class="body">
+      <div class="row"><span><span class="label">Receipt No.</span><br><span class="val">#${r.receiptNo}</span></span>
+                       <span style="text-align:right"><span class="label">Date</span><br><span class="val">${r.date}</span></span></div>
+      <div class="row"><span><span class="label">Student Name</span><br><span class="val">${r.studentName}</span></span>
+                       <span style="text-align:right"><span class="label">Class</span><br><span class="val">${r.class||'—'}</span></span></div>
+      <div class="row"><span><span class="label">Father's Name</span><br><span class="val">${r.fatherName||'—'}</span></span>
+                       <span style="text-align:right"><span class="label">Payment Mode</span><br><span class="val">${r.payMode}</span></span></div>
+      <table>
+        <thead><tr><th>Fee Particulars</th><th style="text-align:right">Amount (₹)</th></tr></thead>
+        <tbody>${breakdown}</tbody>
+        <tr class="total-row"><td>TOTAL PAID</td><td>₹${Number(total).toLocaleString('en-IN')}</td></tr>
+      </table>
+      ${r.inWords?`<p style="font-size:12px;color:#374151;margin-bottom:8px"><strong>In Words:</strong> ${r.inWords}</p>`:''}
+      ${r.remarks?`<p style="font-size:12px;color:#374151"><strong>Remarks:</strong> ${r.remarks}</p>`:''}
+      <div class="footer">
+        <span>Received By: <strong>${r.receivedBy||'—'}</strong></span>
+        <span style="text-align:right">This is a computer-generated receipt</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:24px">
+        <div class="sig" style="width:45%">Parent / Guardian Signature</div>
+        <div class="sig" style="width:45%">Authorised Signatory</div>
+      </div>
+    </div>
+  </div>
+  <!-- COUNTERFOIL -->
+  <div class="cut">✂ &nbsp; SCHOOL COPY — CUT HERE AND KEEP &nbsp; ✂</div>
+  <div class="receipt" style="border-color:#d1d5db">
+    <div class="header" style="background:#374151;padding:12px 16px">
+      <h1 style="font-size:15px">B.N. CONVENT H.S.S. — SCHOOL COPY</h1>
+      <p>Receipt #${r.receiptNo} &nbsp;|&nbsp; ${r.date}</p>
+    </div>
+    <div class="body" style="padding:14px">
+      <div class="row"><span class="label">Student</span><span class="val">${r.studentName} (Class ${r.class||'—'})</span></div>
+      <div class="row"><span class="label">Father</span><span class="val">${r.fatherName||'—'}</span></div>
+      <div class="row"><span class="label">Total Paid</span><span class="val" style="color:#1e3a5f;font-size:16px">₹${Number(total).toLocaleString('en-IN')}</span></div>
+      <div class="row"><span class="label">Mode</span><span class="val">${r.payMode}</span></div>
+    </div>
+  </div>
+  </body></html>`;
+
+  const win = window.open('','_blank','width=680,height=800');
+  win.document.write(html);
+  win.document.close();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// FORM HELPERS
+// ═══════════════════════════════════════════════════════════════════
+function showFormMsg(id, type, text) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const colors = { success:'rgba(16,185,129,.1)', error:'rgba(239,68,68,.1)' };
+  const borders = { success:'rgba(16,185,129,.3)', error:'rgba(239,68,68,.3)' };
+  const textC   = { success:'#6ee7b7', error:'#fca5a5' };
+  el.style.cssText=`display:block;padding:12px 16px;border-radius:10px;font-size:13px;background:${colors[type]};border:1px solid ${borders[type]};color:${textC[type]}`;
+  el.textContent = text;
+  if (type==='success') setTimeout(()=>{ el.style.display='none'; }, 5000);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════════════
+function fmt(n){return Number(n).toLocaleString('en-IN')}
+function loader(){return `<div class="loader"><div class="spinner"></div>Loading…</div>`}
+function errorBox(msg){return `<div class="loader" style="color:var(--danger)">⚠️ ${msg}</div>`}
+function kpi(icon,label,value,sub,cls,money){
+  return `<div class="kpi-card ${cls}"><div class="kpi-icon">${icon}</div><div class="kpi-label">${label}</div><div class="kpi-value ${money?'money':''}">${value}</div><div class="kpi-sub">${sub}</div></div>`;
+}
+function feeColor(k){return {'Hostel Fee':'#8b5cf6','School Fee':'#10b981','Admission Fee':'#f59e0b','Tuition Fee':'#06b6d4'}[k]||'#94a3b8'}
+function classOrd(a,b){const o={'Nursery':0,'LKG':1,'UKG':2,'1st':3,'2nd':4,'3rd':5,'4th':6,'5th':7,'6th':8,'7th':9,'8th':10,'9th':11,'10th':12,'11th':13,'12th':14};return (o[a]??99)-(o[b]??99)}
+
+const timers={};
+function debounce(fn,ms){return function(){clearTimeout(timers[fn]);timers[fn]=setTimeout(fn,ms);}}
+</script>
+</body>
+</html>
