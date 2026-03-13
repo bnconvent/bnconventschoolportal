@@ -266,6 +266,14 @@ tr:last-child td{border-bottom:none}
 }
 
 /* ── FORMS ── */
+#ff-suggest{
+  position:absolute;left:0;right:0;top:calc(100% + 3px);
+  background:var(--card);border:1px solid var(--border);border-radius:10px;
+  box-shadow:0 12px 32px rgba(0,0,0,.5);z-index:200;
+  max-height:300px;overflow-y:auto;
+}
+#ff-suggest:empty{display:none}
+/* ── FORMS ── */
 .form-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px}
 .form-section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
 .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
@@ -347,7 +355,7 @@ tr:last-child td{border-bottom:none}
 // ═══════════════════════════════════════════════════════════════════
 // CONFIG
 // ═══════════════════════════════════════════════════════════════════
-let SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbynfGWZTUn0JYfwoU5AodDSK1YLPE3huPQGRtiPDucyHwfqpjocv3T6mQkBZoc87V_F/exec';
+let SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxG9pyY4sfHzMYNzp6KfDhBAd5R8GQxkMlsFDu6qS3VPW2ndKlFaUksCN5qi67KVJKt/exec';
 let SESSION_TOKEN = '';
 let CURRENT_ROLE = 'admin';
 let CURRENT_USER = '';
@@ -366,10 +374,6 @@ let hostelOnly = false;
 // API HELPER
 // ═══════════════════════════════════════════════════════════════════
 async function api(params) {
-  if (!SCRIPT_URL) {
-    // Demo mode — return fake success for login
-    return demoHandler(params);
-  }
   const url = SCRIPT_URL + '?' + new URLSearchParams(params).toString();
   try {
     const res  = await fetch(url);
@@ -380,85 +384,6 @@ async function api(params) {
     console.error('API error:', e);
     throw e;
   }
-}
-// ═══════════════════════════════════════════════════════════════════
-// DEMO MODE (works without backend — uses embedded data)
-// ═══════════════════════════════════════════════════════════════════
-const DEMO_STUDENTS = [{"name":"Himanshu Gurjar","father":"Shivkumar Gurjar","class":"4th","total":14000,"admission":10000,"tuition":0,"school":4000,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Amrendra Gurjar","father":"Kanshiram Gurjar","class":"5th","total":1500,"admission":1500,"tuition":0,"school":0,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Angad Kumar","father":"Mohan Pyare","class":"12th","total":4000,"admission":0,"tuition":4000,"school":0,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Arti","father":"Bramhdev","class":"5th","total":10000,"admission":0,"tuition":0,"school":10000,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Suraj Dhurve","father":"Dharmpal","class":"UKG","total":2000,"admission":2000,"tuition":0,"school":0,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Arjun Yadav","father":"Devnath Yadav","class":"7th","total":26000,"admission":6000,"tuition":0,"school":0,"hostel":20000,"stationary":0,"other":0,"hasHostel":true},{"name":"Prince Gupta","father":"Ratnesh Kumar","class":"7th","total":20000,"admission":10000,"tuition":0,"school":0,"hostel":10000,"stationary":0,"other":0,"hasHostel":true},{"name":"Ashutosh Paikara","father":"Vinod Kumar","class":"9th","total":17500,"admission":3500,"tuition":0,"school":0,"hostel":14000,"stationary":0,"other":0,"hasHostel":true},{"name":"Mansh Singh","father":"Ramvichar","class":"8th","total":20000,"admission":10000,"tuition":0,"school":0,"hostel":10000,"stationary":0,"other":0,"hasHostel":true},{"name":"Pritam Gupta","father":"Umashankar Gupta","class":"6th","total":5000,"admission":5000,"tuition":0,"school":0,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Saroj","father":"Umashankar Gupta","class":"7th","total":5000,"admission":0,"tuition":0,"school":5000,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Supriya Yadav","father":"Suresh Yadav","class":"8th","total":3000,"admission":3000,"tuition":0,"school":0,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Satyam Yadav","father":"Suresh Yadav","class":"6th","total":5000,"admission":0,"tuition":5000,"school":0,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Pooja","father":"Suresh Yadav","class":"5th","total":20000,"admission":0,"tuition":0,"school":0,"hostel":20000,"stationary":0,"other":0,"hasHostel":true},{"name":"Rishu Kurre","father":"Krishnlal Kurre","class":"7th","total":1000,"admission":1000,"tuition":0,"school":0,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Paridhi","father":"Krishnlal Kurre","class":"1st","total":500,"admission":500,"tuition":0,"school":0,"hostel":0,"stationary":0,"other":0,"hasHostel":false}];
-const DEMO_RECORDS = [{"rno":"201","date":"2025-06-03","name":"Himanshu Gurjar","father":"Shivkumar Gurjar","class":"4th","fee_type":"Admission Fee","amount":1500,"pay_mode":"Cash","recv_by":"Parmeshwar"},{"rno":"202","date":"2025-06-03","name":"Amrendra Gurjar","father":"Kanshiram Gurjar","class":"5th","fee_type":"Admission Fee","amount":1500,"pay_mode":"Cash","recv_by":"Parmeshwar"},{"rno":"203","date":"2025-06-03","name":"Angad Kumar","father":"Mohan Pyare","class":"12th","fee_type":"Tuition Fee","amount":4000,"pay_mode":"Cash","recv_by":"Parmeshwar"},{"rno":"204","date":"2025-06-03","name":"Arti","father":"Bramhdev","class":"5th","fee_type":"School Fee","amount":10000,"pay_mode":"Cash","recv_by":"Parmeshwar"},{"rno":"205","date":"2025-06-04","name":"Suraj Dhurve","father":"Dharmpal","class":"UKG","fee_type":"Admission Fee","amount":2000,"pay_mode":"Cash","recv_by":"Chandrasen Yadav"},{"rno":"210","date":"2025-07-10","name":"Arjun Yadav","father":"Devnath Yadav","class":"7th","fee_type":"Hostel Fee","amount":20000,"pay_mode":"PhonePe","recv_by":"Parmeshwar"},{"rno":"211","date":"2025-07-11","name":"Prince Gupta","father":"Ratnesh Kumar","class":"7th","fee_type":"Hostel Fee","amount":10000,"pay_mode":"Cash","recv_by":"Roshni"}];
-const DEMO_MONTHLY = {"2025-06":97500,"2025-07":132000,"2025-08":83500,"2025-09":75500,"2025-10":14000,"2025-11":10000,"2025-12":45000,"2026-01":113500,"2026-02":153000,"2026-03":57000};
-const DEMO_FEE_TOTALS = {"Admission Fee":195500,"Tuition Fee":76500,"School Fee":203500,"Hostel Fee":315500};
-const DEMO_SUMMARY = {totalStudents:94,hostelStudents:22,totalCollected:791000,hostelCollected:315500,admissionCollected:195500,tuitionCollected:76500,schoolCollected:203500};
-
-function demoHandler(params) {
-  const action = params.action;
-  if (action === 'login') {
-    if (params.role === 'admin') {
-      if (params.username === 'admin' && params.password === 'school@2025')
-        return {success:true,role:'admin',token:'ADMIN_DEMO_TOKEN',user:'Administrator'};
-      return {success:false,error:'Invalid credentials'};
-    }
-    const q = (params.studentName||'').toLowerCase();
-    const matched = DEMO_STUDENTS.filter(s=>s.name.toLowerCase().includes(q)||s.father.toLowerCase().includes(q));
-    if (!matched.length) return {success:false,error:'No student found'};
-    return {success:true,role:'student',user:matched[0].name,studentQuery:q};
-  }
-  if (action === 'getDashboard') return {summary:DEMO_SUMMARY,feeTotals:DEMO_FEE_TOTALS,monthly:DEMO_MONTHLY};
-  if (action === 'getStudents') {
-    let s = [...DEMO_STUDENTS];
-    const q=(params.search||'').toLowerCase();
-    if(q) s=s.filter(x=>x.name.toLowerCase().includes(q)||x.father.toLowerCase().includes(q));
-    if(params.cls) s=s.filter(x=>x.class===params.cls);
-    if(params.hostelOnly==='true') s=s.filter(x=>x.hasHostel);
-    return {students:s};
-  }
-  if (action === 'getHostelStudents') return {students:DEMO_STUDENTS.filter(s=>s.hasHostel).map(s=>({...s,payModes:'Cash'}))};
-  if (action === 'getSiblings') {
-    const families = buildFamilyGroupsJS(DEMO_STUDENTS);
-    return {families};
-  }
-  if (action === 'getFeeRegister') {
-    let r=[...DEMO_RECORDS];
-    const q=(params.search||'').toLowerCase();
-    if(q) r=r.filter(x=>x.name.toLowerCase().includes(q)||x.rno.includes(q));
-    if(params.feeType) r=r.filter(x=>x.fee_type===params.feeType);
-    return {records:r,total:r.length,page:0,pageSize:25};
-  }
-  if (action === 'getStudentHistory') {
-    const q=(params.query||'').toLowerCase();
-    const matched=DEMO_STUDENTS.filter(s=>s.name.toLowerCase().includes(q)||s.father.toLowerCase().includes(q)||(s.mother||'').toLowerCase().includes(q));
-    return {students:matched.map(s=>({
-      ...s,
-      receipts:DEMO_RECORDS.filter(r=>r.name===s.name).map(r=>({receiptNo:r.rno,date:r.date,feeType:r.fee_type,amount:r.amount,payMode:r.pay_mode})),
-      siblings:DEMO_STUDENTS.filter(x=>{
-        if(x.name===s.name) return false;
-        const fM=s.father&&x.father&&s.father.toLowerCase()===x.father.toLowerCase();
-        const mM=s.mother&&x.mother&&s.mother.toLowerCase()===x.mother.toLowerCase();
-        return fM||mM;
-      }).map(x=>({name:x.name,class:x.class}))
-    }))};
-  }
-  if (action === 'addStudent') {
-    // Demo: pretend success
-    return {success:true, message:'Student "'+params.studentName+'" registered successfully (demo mode — connect Google Sheets to save permanently)'};
-  }
-  if (action === 'addFeeEntry') {
-    return {success:true, rowsAdded:1, receiptNo:params.receiptNo, message:'Fee entry saved (demo mode — connect Google Sheets to save permanently)'};
-  }
-  if (action === 'getLastReceiptNo') {
-    const maxRno = Math.max(...DEMO_RECORDS.map(r=>parseInt(r.rno)||0), 200);
-    return { lastReceiptNo: maxRno, nextReceiptNo: maxRno + 1 };
-  }
-  if (action === 'checkDuplicateReceipt') {
-    const byRno = DEMO_RECORDS.filter(r=>r.rno===params.receiptNo);
-    if (byRno.length) return {duplicate:true, type:'receiptNo', message:'Receipt #'+params.receiptNo+' already exists for: '+byRno[0].name};
-    if (params.studentName && params.feeType && params.feeType!=='Other') {
-      const existing = DEMO_RECORDS.filter(r=>r.name===params.studentName && r.fee_type===params.feeType);
-      if (existing.length) return {duplicate:true, type:'studentFee', message:params.studentName+' already paid '+params.feeType+' (Receipt #'+existing[0].rno+')'};
-    }
-    return {duplicate:false};
-  }
-  return {error:'Unknown action in demo mode'};
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -504,6 +429,7 @@ async function doLogin() {
 
 function doLogout() {
   SESSION_TOKEN = ''; CURRENT_USER = ''; stuPage=0; regPage=0;
+  _studentCache = null;
   if(chartMonthly){chartMonthly.destroy();chartMonthly=null;}
   if(chartDonut){chartDonut.destroy();chartDonut=null;}
   document.getElementById('app').style.display='none';
@@ -993,17 +919,13 @@ function clearAdmit() {
 // ═══════════════════════════════════════════════════════════════════
 let feeFormReceipt = { data: null };
 
+// cached student list for suggestions (fetched once per session)
+let _studentCache = null;
+
 async function loadFeePayPage() {
-  // fetch last receipt no from live API
-  let nextRno = 201;
-  try {
-    const d = await api({action:'getLastReceiptNo'});
-    nextRno = d.nextReceiptNo || (Math.max(...DEMO_RECORDS.map(r=>parseInt(r.rno)||0), 200) + 1);
-  } catch(e) {
-    nextRno = Math.max(...DEMO_RECORDS.map(r=>parseInt(r.rno)||0), 200) + 1;
-  }
   const today = new Date().toISOString().slice(0,10);
 
+  // Render form immediately with a loading indicator for receipt no
   document.getElementById('page-feepay').innerHTML = `
   <div style="max-width:740px;margin:0 auto">
     <div class="shdr" style="margin-bottom:20px">
@@ -1013,17 +935,21 @@ async function loadFeePayPage() {
       <div class="form-section-title">🧾 Receipt Details</div>
       <div class="form-grid">
         <div class="fg"><label class="fl">Receipt No. <span class="req">*</span></label>
-          <input class="fi" id="ff-rno" type="number" value="${nextRno}" onblur="checkReceiptNoDuplicate(this.value)"/>
-          <div id="rno-warn" style="display:none;font-size:11px;margin-top:4px;color:#fca5a5"></div></div>
+          <div style="position:relative">
+            <input class="fi" id="ff-rno" type="number" value="" placeholder="Fetching…" readonly style="padding-right:70px;background:rgba(148,163,184,.12);cursor:not-allowed"/>
+            <span id="rno-badge" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:10px;padding:2px 7px;border-radius:4px;background:rgba(245,158,11,.15);color:var(--accent);font-weight:700;pointer-events:none">LOADING</span>
+          </div>
+          <div id="rno-warn" style="display:none;font-size:11px;margin-top:4px;color:#fca5a5"></div>
+        </div>
         <div class="fg"><label class="fl">Date <span class="req">*</span></label>
           <input class="fi" id="ff-date" type="date" value="${today}"/></div>
       </div>
       <div class="form-section-title" style="margin-top:20px">👤 Student Details</div>
       <div class="form-grid">
-        <div class="fg"><label class="fl">Student Name <span class="req">*</span></label>
-          <input class="fi" id="ff-name" type="text" placeholder="Type to search…" oninput="suggestStudents(this.value)"/>
-          <div id="ff-suggest" style="display:none;position:absolute;z-index:99;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-top:4px;max-height:180px;overflow-y:auto;width:100%;box-shadow:0 8px 24px rgba(0,0,0,.4)"></div>
-          <div style="position:relative"></div>
+        <div class="fg" style="position:relative">
+          <label class="fl">Student Name <span class="req">*</span></label>
+          <input class="fi" id="ff-name" type="text" placeholder="Type name to search…" oninput="suggestStudents(this.value)" autocomplete="off"/>
+          <div id="ff-suggest"></div>
         </div>
         <div class="fg"><label class="fl">Father's Name</label>
           <input class="fi" id="ff-father" type="text" placeholder="Auto-filled on student select"/></div>
@@ -1081,39 +1007,94 @@ async function loadFeePayPage() {
       </div>
     </div>
   </div>`;
+
+  // Now fetch receipt no AND student cache in parallel
+  const [rnoResult, stuResult] = await Promise.allSettled([
+    api({action:'getLastReceiptNo'}),
+    api({action:'getStudents', token:SESSION_TOKEN, search:'', cls:'', hostelOnly:'false'})
+  ]);
+
+  // Update receipt no field with live value
+  const rnoField = document.getElementById('ff-rno');
+  const rnoBadge = document.getElementById('rno-badge');
+  if (rnoField) {
+    if (rnoResult.status === 'fulfilled' && rnoResult.value.nextReceiptNo) {
+      rnoField.value = rnoResult.value.nextReceiptNo;
+      rnoBadge.textContent = 'AUTO';
+      rnoBadge.style.background = 'rgba(16,185,129,.15)';
+      rnoBadge.style.color = 'var(--accent3)';
+    } else {
+      rnoField.value = '';
+      rnoBadge.textContent = 'ERROR';
+      rnoBadge.style.background = 'rgba(239,68,68,.15)';
+      rnoBadge.style.color = 'var(--danger)';
+    }
+  }
+
+  // Cache student list for suggestions
+  if (stuResult.status === 'fulfilled' && stuResult.value.students) {
+    _studentCache = stuResult.value.students;
+  } else {
+    _studentCache = [];
+  }
 }
 
 function suggestStudents(q) {
   const box = document.getElementById('ff-suggest');
-  if (!q || q.length < 2) { box.style.display='none'; return; }
-  const matches = DEMO_STUDENTS.filter(s=>s.name.toLowerCase().includes(q.toLowerCase())||s.father.toLowerCase().includes(q.toLowerCase())).slice(0,6);
-  if (!matches.length) { box.style.display='none'; return; }
-  box.style.display='block';
-  box.innerHTML = matches.map(s=>`
-    <div onclick="selectStudent(${JSON.stringify(s).replace(/"/g,'&quot;')})"
-         style="padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .15s"
-         onmouseover="this.style.background='rgba(255,255,255,.05)'" onmouseout="this.style.background=''">
-      <div style="font-weight:500;font-size:13px">${s.name}</div>
-      <div style="font-size:11px;color:var(--muted)">${s.father} · Class ${s.class}</div>
-    </div>`).join('');
-  // reposition under input
-  const inp = document.getElementById('ff-name');
-  box.style.width = inp.offsetWidth+'px';
-  const rect = inp.getBoundingClientRect();
-  box.style.top = (rect.bottom + window.scrollY + 4)+'px';
-  box.style.left = rect.left+'px';
-  box.style.position = 'fixed';
+  if (!box) return;
+  if (!q || q.length < 1) { box.innerHTML=''; return; }
+
+  // Use live cache only (no demo data)
+  const pool = _studentCache || [];
+  const ql = q.toLowerCase();
+  const matches = pool.filter(s =>
+    s.name.toLowerCase().includes(ql) ||
+    (s.father||'').toLowerCase().includes(ql)
+  ).slice(0, 8);
+
+  if (!matches.length) { box.innerHTML=''; return; }
+
+  const feeIcons = {'admission':'📝','tuition':'📚','school':'🏫','hostel':'🏠'};
+
+  box.innerHTML = matches.map(s => {
+    // Show which fees already paid as small tags
+    const paidTags = Object.entries(feeIcons)
+      .filter(([k]) => (s[k]||0) > 0)
+      .map(([k,icon]) => `<span style="background:rgba(16,185,129,.1);color:#6ee7b7;padding:1px 5px;border-radius:3px;font-size:10px">${icon} ${k.charAt(0).toUpperCase()+k.slice(1)} ✓</span>`)
+      .join(' ');
+    const hostelTag = s.hasHostel ? `<span style="background:rgba(139,92,246,.1);color:#c4b5fd;padding:1px 5px;border-radius:3px;font-size:10px">🏠 Hostel</span>` : '';
+
+    return `<div onclick="selectStudent(${JSON.stringify(s).replace(/"/g,'&quot;')})"
+      style="padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .15s"
+      onmouseover="this.style.background='rgba(255,255,255,.06)'" onmouseout="this.style.background=''">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="font-weight:600;font-size:13px;color:var(--text)">${s.name}</div>
+        <span style="font-size:11px;background:rgba(6,182,212,.1);color:var(--accent2);padding:2px 7px;border-radius:4px">Class ${s.class}</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px">Father: ${s.father||'—'}${s.mobile?' · 📱 '+s.mobile:''}</div>
+      ${paidTags||hostelTag ? `<div style="margin-top:5px;display:flex;gap:4px;flex-wrap:wrap">${paidTags}${hostelTag}</div>` : ''}
+    </div>`;
+  }).join('');
 }
 
 function selectStudent(s) {
   document.getElementById('ff-name').value   = s.name;
-  document.getElementById('ff-father').value = s.father;
+  document.getElementById('ff-father').value = s.father || '';
+  if (s.mobile) document.getElementById('ff-mobile').value = s.mobile;
   const sel = document.getElementById('ff-class');
-  for(let i=0;i<sel.options.length;i++) if(sel.options[i].value===s.class){sel.selectedIndex=i;break;}
-  document.getElementById('ff-suggest').style.display='none';
+  if (sel) {
+    for (let i=0; i<sel.options.length; i++) {
+      if (sel.options[i].value === s.class || sel.options[i].text === s.class) {
+        sel.selectedIndex = i; break;
+      }
+    }
+  }
+  const box = document.getElementById('ff-suggest');
+  if (box) box.innerHTML = '';
+  // trigger duplicate hint for this student
+  document.getElementById('ff-name').focus();
+  document.getElementById('ff-name').blur();
 }
-
-document.addEventListener('click', e=>{ const b=document.getElementById('ff-suggest'); if(b&&!b.contains(e.target)&&e.target.id!=='ff-name') b.style.display='none'; });
 
 function updateFeeTotal() {
   const ids=['ff-admission','ff-tuition','ff-school','ff-hostel','ff-stationary','ff-other'];
@@ -1187,25 +1168,19 @@ async function submitFeeEntry() {
 
   // ── Pre-save duplicate check ──────────────────────────────────
   try {
-    // 1. Check receipt no duplicate
+    // 1. Check receipt no duplicate (backend reliable for this)
     const rnoCheck = await api({action:'checkDuplicateReceipt', token:SESSION_TOKEN, receiptNo:rno});
     if (rnoCheck.duplicate && rnoCheck.type==='receiptNo') {
-      const proceed = confirm('⚠️ Duplicate Receipt No!\n\n'+rnoCheck.message+'\n\nDo you want to proceed anyway?');
-      if (!proceed) { btn.disabled=false; btn.textContent='💾 Save & Generate Receipt'; return; }
+      showFormMsg('feepay-msg','error','⚠️ '+rnoCheck.message+' Please choose a new receipt number.');
+      btn.disabled=false; btn.textContent='💾 Save & Generate Receipt';
+      return;
     }
-    // 2. Check each fee type for duplicate payment
-    const feeAmounts = feeIds.map((id,i)=>({name:feeNames[i],val:parseFloat(document.getElementById(id)?.value)||0}));
-    const paidFees   = feeAmounts.filter(f=>f.val>0 && f.name!=='Other');
-    const dupWarnings = [];
-    for (const fee of paidFees) {
-      const fc = await api({action:'checkDuplicateReceipt', token:SESSION_TOKEN, receiptNo:'__skip__', studentName:name, feeType:fee.name});
-      if (fc.duplicate && fc.type==='studentFee') dupWarnings.push(fc.message);
-    }
-    if (dupWarnings.length > 0) {
-      const proceed = confirm('⚠️ Possible Duplicate Payment!\n\n'+dupWarnings.join('\n')+'\n\nThis student may have already paid these fees.\nDo you want to save anyway?');
-      if (!proceed) { btn.disabled=false; btn.textContent='💾 Save & Generate Receipt'; return; }
-    }
-  } catch(e) { /* if check fails, allow save to continue */ }
+    // No fee-type duplicate validation; multiple payments per student are allowed.
+  } catch(e) {
+    showFormMsg('feepay-msg','error','⚠️ Duplicate check failed. Please retry or contact admin.');
+    btn.disabled=false; btn.textContent='💾 Save & Generate Receipt';
+    return;
+  }
 
   btn.textContent='Saving…';
 
