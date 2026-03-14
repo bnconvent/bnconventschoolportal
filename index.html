@@ -7,75 +7,35 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-/* ══ PASTE YOUR WEB APP URL FROM APPS SCRIPT BELOW ══════════════ */
-/* See SETUP_GUIDE.html for instructions */
-
-:root {
-  --bg:#0a0e1a; --surface:#111827; --card:#1a2235; --border:#1e2d45;
-  --accent:#f59e0b; --accent2:#06b6d4; --accent3:#10b981;
-  --danger:#ef4444; --hostel:#8b5cf6; --text:#f1f5f9; --muted:#64748b; --subtle:#1e293b;
-}
+:root{--bg:#0a0e1a;--surface:#111827;--card:#1a2235;--border:#1e2d45;--accent:#f59e0b;--accent2:#06b6d4;--accent3:#10b981;--danger:#ef4444;--hostel:#8b5cf6;--text:#f1f5f9;--muted:#64748b;--subtle:#1e293b}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-
-/* API auto-connected */
-
 /* LOGIN */
-#login-screen{
-  display:flex;align-items:center;justify-content:center;min-height:100vh;
-  background:var(--bg);
-  background-image:radial-gradient(ellipse at 20% 50%,rgba(245,158,11,.08),transparent 60%),
-                   radial-gradient(ellipse at 80% 20%,rgba(6,182,212,.06),transparent 60%);
-  position:fixed;inset:0;z-index:100;transition:opacity .4s,visibility .4s;
-}
+#login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--bg);background-image:radial-gradient(ellipse at 20% 50%,rgba(245,158,11,.08),transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(6,182,212,.06),transparent 60%);position:fixed;inset:0;z-index:100;transition:opacity .4s,visibility .4s}
 #login-screen.hidden{opacity:0;visibility:hidden;pointer-events:none}
-.login-box{
-  background:var(--card);border:1px solid var(--border);border-radius:20px;
-  padding:44px;width:420px;max-width:95vw;box-shadow:0 40px 80px rgba(0,0,0,.5);
-  animation:slideUp .5s ease;
-}
+.login-box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:44px;width:420px;max-width:95vw;box-shadow:0 40px 80px rgba(0,0,0,.5);animation:slideUp .5s ease}
 @keyframes slideUp{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}
 .school-crest{text-align:center;margin-bottom:28px}
 .school-crest .icon{font-size:44px;display:block;margin-bottom:10px}
 .school-crest h1{font-family:'DM Serif Display',serif;font-size:21px;color:var(--text);line-height:1.3}
 .school-crest p{font-size:11px;color:var(--muted);margin-top:5px;letter-spacing:.06em;text-transform:uppercase}
-.login-divider{height:1px;background:var(--border);margin:22px 0}
 .role-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:22px}
-.role-tab{
-  padding:10px;border-radius:10px;border:1px solid var(--border);
-  background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;
-  font-size:13px;cursor:pointer;transition:all .2s;
-}
+.role-tab{padding:10px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;transition:all .2s}
 .role-tab.active{background:var(--accent);border-color:var(--accent);color:#000;font-weight:700}
 .field-group{margin-bottom:14px}
 .field-group label{display:block;font-size:11px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em}
-.field-group input{
-  width:100%;padding:11px 14px;background:var(--subtle);border:1px solid var(--border);
-  border-radius:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;
-  transition:border-color .2s;outline:none;
-}
+.field-group input{width:100%;padding:11px 14px;background:var(--subtle);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;transition:border-color .2s;outline:none}
 .field-group input:focus{border-color:var(--accent)}
 .field-group input::placeholder{color:var(--muted)}
-.login-btn{
-  width:100%;padding:13px;background:var(--accent);border:none;border-radius:10px;
-  color:#000;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;
-  cursor:pointer;transition:all .2s;margin-top:6px;
-}
+.login-btn{width:100%;padding:13px;background:var(--accent);border:none;border-radius:10px;color:#000;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .2s;margin-top:6px}
 .login-btn:hover{background:#fbbf24;transform:translateY(-1px);box-shadow:0 8px 20px rgba(245,158,11,.3)}
 .login-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
 .login-error{color:var(--danger);font-size:12px;text-align:center;margin-top:10px;display:none}
-.login-hint{font-size:11px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.7}
+.login-hint{font-size:11px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.8}
 .login-hint strong{color:var(--accent2)}
-
 /* APP */
 #app{display:none;min-height:100vh}
-
-/* TOPBAR */
-.topbar{
-  background:var(--surface);border-bottom:1px solid var(--border);
-  padding:0 22px;height:58px;display:flex;align-items:center;
-  justify-content:space-between;position:sticky;top:0;z-index:50;
-}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 22px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
 .topbar-logo{font-family:'DM Serif Display',serif;font-size:18px}
 .topbar-logo span{color:var(--accent)}
 .role-badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
@@ -83,104 +43,49 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .role-badge.student{background:rgba(6,182,212,.15);color:var(--accent2);border:1px solid rgba(6,182,212,.3)}
 .topbar-right{display:flex;align-items:center;gap:10px}
 .user-name{font-size:12px;color:var(--muted)}
-.logout-btn{
-  padding:6px 12px;background:transparent;border:1px solid var(--border);
-  border-radius:8px;color:var(--muted);font-size:12px;cursor:pointer;
-  font-family:'DM Sans',sans-serif;transition:all .2s;
-}
+.logout-btn{padding:6px 12px;background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
 .logout-btn:hover{border-color:var(--danger);color:var(--danger)}
-
-/* NAV */
-.nav-tabs{
-  background:var(--surface);border-bottom:1px solid var(--border);
-  padding:0 22px;display:flex;gap:2px;overflow-x:auto;
-}
-.nav-tab{
-  padding:13px 16px;background:transparent;border:none;color:var(--muted);
-  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;
-  cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;
-}
+.nav-tabs{background:var(--surface);border-bottom:1px solid var(--border);padding:0 22px;display:flex;gap:2px;overflow-x:auto}
+.nav-tab{padding:13px 16px;background:transparent;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
 .nav-tab:hover{color:var(--text)}
 .nav-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
-
-/* MAIN */
 .main{padding:24px;max-width:1400px;margin:0 auto}
 .page{display:none}
 .page.active{display:block;animation:fadeIn .3s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-
 /* LOADER */
 .loader{text-align:center;padding:60px;color:var(--muted);font-size:14px}
-.spinner{
-  width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);
-  border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 16px;
-}
+.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 16px}
 @keyframes spin{to{transform:rotate(360deg)}}
-
 /* KPI */
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:24px}
-.kpi-card{
-  background:var(--card);border:1px solid var(--border);border-radius:14px;
-  padding:22px;position:relative;overflow:hidden;transition:transform .2s;
-}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;position:relative;overflow:hidden;transition:transform .2s}
 .kpi-card:hover{transform:translateY(-2px)}
 .kpi-card::before{content:'';position:absolute;top:0;right:0;width:70px;height:70px;border-radius:0 14px 0 70px;opacity:.1}
-.kpi-card.gold::before{background:var(--accent)}
-.kpi-card.cyan::before{background:var(--accent2)}
-.kpi-card.green::before{background:var(--accent3)}
-.kpi-card.purple::before{background:var(--hostel)}
+.kpi-card.gold::before{background:var(--accent)}.kpi-card.cyan::before{background:var(--accent2)}.kpi-card.green::before{background:var(--accent3)}.kpi-card.purple::before{background:var(--hostel)}.kpi-card.red::before{background:var(--danger)}
 .kpi-icon{font-size:20px;margin-bottom:10px}
 .kpi-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px}
 .kpi-value{font-family:'DM Serif Display',serif;font-size:26px;color:var(--text)}
 .kpi-value.money{font-family:'JetBrains Mono',monospace;font-size:19px}
 .kpi-sub{font-size:11px;color:var(--muted);margin-top:3px}
-
 /* CHARTS */
 .charts-grid{display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-bottom:24px}
 .chart-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px}
 .chart-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:18px;display:flex;align-items:center;gap:8px}
 .chart-title .dot{width:7px;height:7px;border-radius:50%}
 .chart-wrap{position:relative;height:190px}
-
-/* FEE BARS */
-.fee-bars{display:grid;gap:10px;margin-bottom:24px}
-.fee-bar-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
-.fee-bar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.fee-bar-label{font-size:13px;font-weight:500;color:var(--text)}
-.fee-bar-amount{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent)}
-.fee-bar-track{height:5px;background:var(--border);border-radius:3px;overflow:hidden}
-.fee-bar-fill{height:100%;border-radius:3px;transition:width 1.2s ease}
-
 /* TABLE */
 .table-wrap{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
 .table-toolbar{padding:14px 18px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);flex-wrap:wrap}
-.search-box{
-  flex:1;min-width:180px;padding:8px 13px;background:var(--subtle);
-  border:1px solid var(--border);border-radius:9px;color:var(--text);
-  font-family:'DM Sans',sans-serif;font-size:13px;outline:none;
-}
+.search-box{flex:1;min-width:180px;padding:8px 13px;background:var(--subtle);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none}
 .search-box:focus{border-color:var(--accent2)}
-.filter-select{
-  padding:8px 13px;background:var(--subtle);border:1px solid var(--border);
-  border-radius:9px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;cursor:pointer;
-}
-.hostel-toggle{
-  padding:7px 13px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;
-  border:1px solid rgba(139,92,246,.3);background:rgba(139,92,246,.1);
-  color:var(--hostel);font-family:'DM Sans',sans-serif;transition:all .2s;
-}
+.filter-select{padding:8px 13px;background:var(--subtle);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;cursor:pointer}
+.hostel-toggle{padding:7px 13px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid rgba(139,92,246,.3);background:rgba(139,92,246,.1);color:var(--hostel);font-family:'DM Sans',sans-serif;transition:all .2s}
 .hostel-toggle.active{background:var(--hostel);color:white;border-color:var(--hostel)}
 .tcount{font-size:12px;color:var(--muted);margin-left:auto}
 table{width:100%;border-collapse:collapse}
-th{
-  padding:11px 14px;text-align:left;font-size:11px;font-weight:600;
-  text-transform:uppercase;letter-spacing:.08em;color:var(--muted);
-  border-bottom:1px solid var(--border);background:var(--subtle);
-}
-td{
-  padding:11px 14px;font-size:13px;border-bottom:1px solid rgba(30,45,69,.5);
-  transition:background .15s;
-}
+th{padding:11px 14px;text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);background:var(--subtle)}
+td{padding:11px 14px;font-size:13px;border-bottom:1px solid rgba(30,45,69,.5);transition:background .15s}
 tr:hover td{background:rgba(255,255,255,.02)}
 tr:last-child td{border-bottom:none}
 .cbadge{display:inline-block;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:600;background:rgba(6,182,212,.12);color:var(--accent2)}
@@ -189,16 +94,11 @@ tr:last-child td{border-bottom:none}
 .zc{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)}
 .pager{padding:11px 18px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);font-size:12px;color:var(--muted)}
 .pager-btns{display:flex;gap:6px}
-.pbtn{
-  padding:6px 12px;background:var(--subtle);border:1px solid var(--border);
-  border-radius:7px;color:var(--text);font-size:12px;cursor:pointer;
-  font-family:'DM Sans',sans-serif;transition:all .2s;
-}
+.pbtn{padding:6px 12px;background:var(--subtle);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
 .pbtn:hover{border-color:var(--accent)}
 .pbtn:disabled{opacity:.3;cursor:not-allowed}
-
 /* SIBLINGS */
-.siblings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.siblings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
 .sib-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;transition:transform .2s,border-color .2s}
 .sib-card:hover{transform:translateY(-2px);border-color:var(--accent2)}
 .sib-father{font-family:'DM Serif Display',serif;font-size:15px;margin-bottom:3px;display:flex;align-items:center;gap:8px}
@@ -209,22 +109,12 @@ tr:last-child td{border-bottom:none}
 .sib-child .cn{font-size:13px;font-weight:500}
 .sib-child .cm{font-size:11px;color:var(--muted);margin-top:2px}
 .sib-child .ct{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent3)}
-
 /* HOSTEL STATS */
 .hostel-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:22px}
 .hstat{background:linear-gradient(135deg,rgba(139,92,246,.13),rgba(139,92,246,.04));border:1px solid rgba(139,92,246,.25);border-radius:14px;padding:18px}
 .hstat .val{font-family:'JetBrains Mono',monospace;font-size:22px;color:var(--hostel);margin-bottom:3px}
 .hstat .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
-
-/* STUDENT HISTORY VIEW */
-.hist-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px;margin-bottom:22px;text-align:center}
-.hist-box h2{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:6px}
-.hist-box p{font-size:13px;color:var(--muted);margin-bottom:18px}
-.hist-row{display:flex;gap:9px;max-width:460px;margin:0 auto}
-.hist-row input{flex:1;padding:11px 14px;background:var(--subtle);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none}
-.hist-row input:focus{border-color:var(--accent2)}
-.sbtn{padding:11px 18px;background:var(--accent2);border:none;border-radius:9px;color:#000;font-weight:700;font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer}
-.hist-result{display:none}
+/* STUDENT HISTORY */
 .sprofile{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:18px}
 .sph{display:flex;align-items:center;gap:16px;margin-bottom:18px}
 .spav{width:52px;height:52px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:20px;color:#000;flex-shrink:0}
@@ -253,18 +143,49 @@ tr:last-child td{border-bottom:none}
 .rdate{font-size:11px;color:var(--muted);margin-top:2px}
 .ramt{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--accent3);font-weight:600}
 .empty{text-align:center;padding:36px;color:var(--muted);font-size:13px}
-
 /* SECTION HDR */
 .shdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .stitle{font-family:'DM Serif Display',serif;font-size:20px}
 .ssub{font-size:12px;color:var(--muted)}
-
+/* FORMS */
+.form-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px}
+.form-section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.fg{display:flex;flex-direction:column;position:relative}
+.fl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}
+.req{color:var(--danger)}
+.fi{padding:10px 13px;background:var(--subtle);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color .2s;-webkit-appearance:none}
+.fi:focus{border-color:var(--accent2);background:rgba(6,182,212,.04)}
+.fi::placeholder{color:var(--muted)}
+.fi option{background:var(--card);color:var(--text)}
+.fee-total-bar{display:flex;justify-content:space-between;align-items:center;background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);border-radius:12px;padding:14px 20px;margin-top:16px}
+.fee-total-bar span:first-child{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.form-btn{padding:11px 22px;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.form-btn.primary{background:var(--accent3);color:#000}
+.form-btn.primary:hover{background:#0ea96e;transform:translateY(-1px)}
+.form-btn.primary:disabled{opacity:.5;transform:none;cursor:not-allowed}
+.form-btn.blue{background:var(--accent2);color:#000}
+.form-btn.blue:hover{background:#0ea5c9;transform:translateY(-1px)}
+.form-btn.gold{background:var(--accent);color:#000}
+.form-btn.gold:hover{background:#fbbf24;transform:translateY(-1px)}
+.form-btn.secondary{background:var(--subtle);color:var(--muted);border:1px solid var(--border)}
+.form-btn.secondary:hover{border-color:var(--danger);color:var(--danger)}
+/* STUDENT LOOKUP CARD */
+.lookup-result{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-top:20px}
+.lookup-hero{background:linear-gradient(135deg,#1e3a5f,#0f2540);padding:24px 28px;display:flex;align-items:center;gap:18px}
+.lookup-avatar{width:60px;height:60px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:24px;color:#000;flex-shrink:0}
+.lookup-name{font-family:'DM Serif Display',serif;font-size:22px;color:white;margin-bottom:3px}
+.lookup-meta{font-size:12px;color:rgba(255,255,255,.6)}
+.lookup-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--subtle)}
+.lookup-tab{padding:11px 20px;border:none;background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+.lookup-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.lookup-body{padding:22px}
 /* REPORT CARD */
 .rc-hero{background:linear-gradient(135deg,var(--card) 0%,rgba(6,182,212,.08) 100%);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:22px;text-align:center}
 .rc-search-row{display:flex;gap:10px;max-width:500px;margin:18px auto 0}
 .rc-search-row input{flex:1;padding:11px 14px;background:var(--subtle);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none}
 .rc-search-row input:focus{border-color:var(--accent2)}
-.rc-search-row button{padding:11px 18px;background:var(--accent2);border:none;border-radius:9px;color:#000;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;font-size:14px}
+.rc-search-row button{padding:11px 18px;background:var(--accent2);border:none;border-radius:9px;color:#000;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer}
 .rc-tabs{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:20px;overflow-x:auto}
 .rc-tab{padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;transition:all .2s}
 .rc-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
@@ -285,10 +206,7 @@ tr:last-child td{border-bottom:none}
 .rc-table tr:hover td{background:rgba(255,255,255,.02)}
 .rc-table tr:last-child td{border-bottom:none}
 .rc-marks{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600}
-.rc-marks.pass{color:var(--accent3)}
-.rc-marks.fail{color:var(--danger)}
-.rc-marks.absent{color:var(--muted)}
-.rc-marks.avg{color:var(--accent)}
+.rc-marks.pass{color:var(--accent3)}.rc-marks.fail{color:var(--danger)}.rc-marks.absent{color:var(--muted)}
 .grade-pill{display:inline-block;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace}
 .grade-O{background:rgba(16,185,129,.15);color:#6ee7b7}
 .grade-A{background:rgba(6,182,212,.15);color:var(--accent2)}
@@ -309,51 +227,29 @@ tr:last-child td{border-bottom:none}
 .rc-na-box .rc-na-icon{font-size:44px;margin-bottom:14px;opacity:.5}
 .rc-na-box p{font-size:13px;line-height:1.8}
 .rc-print-btn{display:flex;gap:10px;padding:14px 26px;border-top:1px solid var(--border);flex-wrap:wrap}
+/* SUGGEST DROPDOWN */
+#ff-suggest{position:absolute;left:0;right:0;top:calc(100% + 3px);background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.5);z-index:200;max-height:300px;overflow-y:auto}
+#ff-suggest:empty{display:none}
+/* FEE BARS */
+.fee-bars{display:grid;gap:10px;margin-bottom:24px}
+.fee-bar-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
+.fee-bar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.fee-bar-label{font-size:13px;font-weight:500;color:var(--text)}
+.fee-bar-amount{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent)}
+.fee-bar-track{height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.fee-bar-fill{height:100%;border-radius:3px;transition:width 1.2s ease}
+/* NOTICES */
 .rc-coming-soon{background:linear-gradient(135deg,rgba(139,92,246,.08),rgba(6,182,212,.06));border:1px solid rgba(139,92,246,.2);border-radius:14px;padding:40px;text-align:center;margin:20px 0}
 .rc-coming-soon .cs-icon{font-size:52px;margin-bottom:16px}
 .rc-coming-soon h3{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:8px;color:var(--text)}
 .rc-coming-soon p{font-size:13px;color:var(--muted);max-width:420px;margin:0 auto;line-height:1.8}
-
-@media(max-width:768px){
-  .charts-grid{grid-template-columns:1fr}
-  .kpi-grid{grid-template-columns:repeat(2,1fr)}
-  .main{padding:14px}
-}
-
-/* ── FORMS ── */
-#ff-suggest{
-  position:absolute;left:0;right:0;top:calc(100% + 3px);
-  background:var(--card);border:1px solid var(--border);border-radius:10px;
-  box-shadow:0 12px 32px rgba(0,0,0,.5);z-index:200;
-  max-height:300px;overflow-y:auto;
-}
-#ff-suggest:empty{display:none}
-/* ── FORMS ── */
-.form-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px}
-.form-section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
-.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
-.fg{display:flex;flex-direction:column;position:relative}
-.fl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}
-.req{color:var(--danger)}
-.fi{padding:10px 13px;background:var(--subtle);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color .2s;-webkit-appearance:none}
-.fi:focus{border-color:var(--accent2);background:rgba(6,182,212,.04)}
-.fi::placeholder{color:var(--muted)}
-.fi option{background:var(--card);color:var(--text)}
-.fee-total-bar{display:flex;justify-content:space-between;align-items:center;background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);border-radius:12px;padding:14px 20px;margin-top:16px}
-.fee-total-bar span:first-child{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
-.form-btn{padding:11px 22px;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
-.form-btn.primary{background:var(--accent3);color:#000}
-.form-btn.primary:hover{background:#0ea96e;transform:translateY(-1px)}
-.form-btn.primary:disabled{opacity:.5;transform:none;cursor:not-allowed}
-.form-btn.blue{background:var(--accent2);color:#000}
-.form-btn.blue:hover{background:#0ea5c9;transform:translateY(-1px)}
-.form-btn.secondary{background:var(--subtle);color:var(--muted);border:1px solid var(--border)}
-.form-btn.secondary:hover{border-color:var(--danger);color:var(--danger)}
+/* TEST SCORES */
+.score-band{height:8px;border-radius:4px;background:var(--border);overflow:hidden;margin-top:4px}
+.score-fill{height:100%;border-radius:4px;transition:width .8s ease}
+@media(max-width:768px){.charts-grid{grid-template-columns:1fr}.kpi-grid{grid-template-columns:repeat(2,1fr)}.main{padding:14px}}
 </style>
 </head>
 <body>
-
-<!-- API connected -->
 
 <!-- LOGIN -->
 <div id="login-screen">
@@ -363,7 +259,7 @@ tr:last-child td{border-bottom:none}
       <h1>BN Convent Higher Secondary School</h1>
       <p>Wadrafnagar, Balrampur · Session 2025-26</p>
     </div>
-    <div class="login-divider" style="height:1px;background:var(--border);margin:20px 0"></div>
+    <div style="height:1px;background:var(--border);margin:20px 0"></div>
     <div class="role-tabs">
       <button class="role-tab active" onclick="setRole('admin')" id="tab-admin">🔐 Admin</button>
       <button class="role-tab" onclick="setRole('student')" id="tab-student">👤 Student / Parent</button>
@@ -382,12 +278,14 @@ tr:last-child td{border-bottom:none}
         <input id="student-mother-input" type="text" placeholder="Enter mother's name" autocomplete="off" onkeydown="if(event.key==='Enter')doLogin()"/>
       </div>
       <div style="font-size:11px;color:var(--muted);margin-top:-6px;margin-bottom:12px;padding:8px 10px;background:rgba(6,182,212,.06);border:1px solid rgba(6,182,212,.15);border-radius:8px">
-        🔒 Your name + mother's name must match school records exactly
+        🔒 Name + mother's name must match school records exactly
       </div>
     </div>
     <button class="login-btn" id="login-btn" onclick="doLogin()">Sign In →</button>
     <div class="login-error" id="login-error"></div>
-    <div class="login-hint" id="login-hint">Demo: <strong>admin / school@2025</strong><br><span id="student-hint" style="display:none">Demo student: <strong>Himanshu Gurjar</strong> / Mother: <strong>Savitri Gurjar</strong></span></div>
+    <div class="login-hint" id="login-hint">
+      <span id="student-hint" style="display:none"><br>Demo student: <strong>Himanshu Gurjar</strong> / Mother: <strong>Savitri Gurjar</strong></span>
+    </div>
   </div>
 </div>
 
@@ -405,6 +303,7 @@ tr:last-child td{border-bottom:none}
   </div>
   <div class="nav-tabs" id="nav-tabs"></div>
   <div class="main">
+    <!-- ADMIN PAGES -->
     <div class="page" id="page-dashboard"></div>
     <div class="page" id="page-students"></div>
     <div class="page" id="page-hostel"></div>
@@ -412,1849 +311,20 @@ tr:last-child td{border-bottom:none}
     <div class="page" id="page-register"></div>
     <div class="page" id="page-admit"></div>
     <div class="page" id="page-feepay"></div>
+    <div class="page" id="page-expenses"></div>
+    <div class="page" id="page-tests"></div>
+    <!-- STUDENT PAGES -->
     <div class="page" id="page-history"></div>
     <div class="page" id="page-report"></div>
+    <div class="page" id="page-myscores"></div>
     <div class="page" id="page-payment"></div>
     <div class="page" id="page-notices"></div>
   </div>
 </div>
 
-<script>
-// ═══════════════════════════════════════════════════════════════════
-// CONFIG
-// ═══════════════════════════════════════════════════════════════════
-let SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwMgt5_w5B0vJZF3x4xPgW4iWNOjUl_QplOOsyQv7U07PMQNBKIGkz0kjkFgi5PGb4r/exec';
-let SESSION_TOKEN = '';
-let CURRENT_ROLE = 'admin';
-let CURRENT_USER = '';
-let studentQuery = '';
-let CURRENT_MOTHER = '';
-
-// Charts
-let chartMonthly = null, chartDonut = null;
-// Pagination
-let stuPage = 0, regPage = 0;
-let stuData = [], regData = [];
-let hostelOnly = false;
-
-// API URL hardcoded — no setup needed
-
-// ═══════════════════════════════════════════════════════════════════
-// API HELPER
-// ═══════════════════════════════════════════════════════════════════
-async function api(params) {
-  if (!SCRIPT_URL) {
-    // Demo mode — return fake success for login
-    return demoHandler(params);
-  }
-  const url = SCRIPT_URL + '?' + new URLSearchParams(params).toString();
-  try {
-    const res  = await fetch(url);
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
-    return data;
-  } catch(e) {
-    console.error('API error:', e);
-    throw e;
-  }
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// DEMO MODE (works without backend — uses embedded data)
-// ═══════════════════════════════════════════════════════════════════
-const DEMO_STUDENTS = [{"name":"Himanshu Gurjar","father":"Shivkumar Gurjar","mother":"Savitri Gurjar","mobile":"9876543210","class":"4th","total":14000,"admission":10000,"tuition":0,"school":4000,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Amrendra Gurjar","father":"Kanshiram Gurjar","mother":"Radha Gurjar","mobile":"","class":"5th","total":1500,"admission":1500,"tuition":0,"school":0,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Angad Kumar","father":"Mohan Pyare","mother":"Sunita Devi","mobile":"","class":"12th","total":4000,"admission":0,"tuition":4000,"school":0,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Arti","father":"Bramhdev","mother":"Kamla Devi","mobile":"","class":"5th","total":10000,"admission":0,"tuition":0,"school":10000,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Suraj Dhurve","father":"Dharmpal","mother":"Geeta Dhurve","mobile":"","class":"UKG","total":2000,"admission":2000,"tuition":0,"school":0,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Arjun Yadav","father":"Devnath Yadav","mother":"Parvati Yadav","mobile":"9999900001","class":"7th","total":26000,"admission":6000,"tuition":0,"school":0,"hostel":20000,"stationary":0,"other":0,"hasHostel":true},{"name":"Prince Gupta","father":"Ratnesh Kumar","mother":"Meena Gupta","mobile":"","class":"7th","total":20000,"admission":10000,"tuition":0,"school":0,"hostel":10000,"stationary":0,"other":0,"hasHostel":true},{"name":"Ashutosh Paikara","father":"Vinod Kumar","mother":"Sushma Paikara","mobile":"","class":"9th","total":17500,"admission":3500,"tuition":0,"school":0,"hostel":14000,"stationary":0,"other":0,"hasHostel":true},{"name":"Mansh Singh","father":"Ramvichar","mother":"Laxmi Singh","mobile":"","class":"8th","total":20000,"admission":10000,"tuition":0,"school":0,"hostel":10000,"stationary":0,"other":0,"hasHostel":true},{"name":"Pritam Gupta","father":"Umashankar Gupta","mother":"Rekha Gupta","mobile":"","class":"6th","total":5000,"admission":5000,"tuition":0,"school":0,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Saroj","father":"Umashankar Gupta","mother":"Rekha Gupta","mobile":"","class":"7th","total":5000,"admission":0,"tuition":0,"school":5000,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Supriya Yadav","father":"Suresh Yadav","mother":"Anita Yadav","mobile":"","class":"8th","total":3000,"admission":3000,"tuition":0,"school":0,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Satyam Yadav","father":"Suresh Yadav","mother":"Anita Yadav","mobile":"","class":"6th","total":5000,"admission":0,"tuition":5000,"school":0,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Pooja","father":"Suresh Yadav","mother":"Anita Yadav","mobile":"","class":"5th","total":20000,"admission":0,"tuition":0,"school":0,"hostel":20000,"stationary":0,"other":0,"hasHostel":true},{"name":"Rishu Kurre","father":"Krishnlal Kurre","mother":"Savita Kurre","mobile":"","class":"7th","total":1000,"admission":1000,"tuition":0,"school":0,"hostel":0,"stationary":0,"other":0,"hasHostel":false},{"name":"Paridhi","father":"Krishnlal Kurre","mother":"Savita Kurre","mobile":"","class":"1st","total":500,"admission":500,"tuition":0,"school":0,"hostel":0,"stationary":0,"other":0,"hasHostel":false}];
-const DEMO_RECORDS = [{"rno":"201","date":"2025-06-03","name":"Himanshu Gurjar","father":"Shivkumar Gurjar","class":"4th","fee_type":"Admission Fee","amount":1500,"pay_mode":"Cash","recv_by":"Parmeshwar"},{"rno":"202","date":"2025-06-03","name":"Amrendra Gurjar","father":"Kanshiram Gurjar","class":"5th","fee_type":"Admission Fee","amount":1500,"pay_mode":"Cash","recv_by":"Parmeshwar"},{"rno":"203","date":"2025-06-03","name":"Angad Kumar","father":"Mohan Pyare","class":"12th","fee_type":"Tuition Fee","amount":4000,"pay_mode":"Cash","recv_by":"Parmeshwar"},{"rno":"204","date":"2025-06-03","name":"Arti","father":"Bramhdev","class":"5th","fee_type":"School Fee","amount":10000,"pay_mode":"Cash","recv_by":"Parmeshwar"},{"rno":"205","date":"2025-06-04","name":"Suraj Dhurve","father":"Dharmpal","class":"UKG","fee_type":"Admission Fee","amount":2000,"pay_mode":"Cash","recv_by":"Chandrasen Yadav"},{"rno":"210","date":"2025-07-10","name":"Arjun Yadav","father":"Devnath Yadav","class":"7th","fee_type":"Hostel Fee","amount":20000,"pay_mode":"PhonePe","recv_by":"Parmeshwar"},{"rno":"211","date":"2025-07-11","name":"Prince Gupta","father":"Ratnesh Kumar","class":"7th","fee_type":"Hostel Fee","amount":10000,"pay_mode":"Cash","recv_by":"Roshni"}];
-const DEMO_MONTHLY = {"2025-06":97500,"2025-07":132000,"2025-08":83500,"2025-09":75500,"2025-10":14000,"2025-11":10000,"2025-12":45000,"2026-01":113500,"2026-02":153000,"2026-03":57000};
-const DEMO_FEE_TOTALS = {"Admission Fee":195500,"Tuition Fee":76500,"School Fee":203500,"Hostel Fee":315500};
-const DEMO_SUMMARY = {totalStudents:94,hostelStudents:22,totalCollected:791000,hostelCollected:315500,admissionCollected:195500,tuitionCollected:76500,schoolCollected:203500};
-
-function demoHandler(params) {
-  const action = params.action;
-  if (action === 'login') {
-    if (params.role === 'admin') {
-      if (params.username === 'admin' && params.password === 'school@2025')
-        return {success:true,role:'admin',token:'ADMIN_DEMO_TOKEN',user:'Administrator'};
-      return {success:false,error:'Invalid credentials'};
-    }
-    const sn = (params.studentName||'').toLowerCase().trim();
-    const sm = (params.motherName||'').toLowerCase().trim();
-    if (!sn || !sm) return {success:false,error:'Please enter both student name and mother name'};
-    const matched = DEMO_STUDENTS.filter(s=>s.name.toLowerCase()===sn && (s.mother||'Devi').toLowerCase()===sm);
-    if (!matched.length) return {success:false,error:'No student found. Name or mother name does not match records.'};
-    return {success:true,role:'student',user:matched[0].name,studentQuery:matched[0].name,motherName:matched[0].mother||''};
-  }
-  if (action === 'getDashboard') return {summary:DEMO_SUMMARY,feeTotals:DEMO_FEE_TOTALS,monthly:DEMO_MONTHLY};
-  if (action === 'getStudents') {
-    let s = [...DEMO_STUDENTS];
-    const q=(params.search||'').toLowerCase();
-    if(q) s=s.filter(x=>x.name.toLowerCase().includes(q)||x.father.toLowerCase().includes(q));
-    if(params.cls) s=s.filter(x=>x.class===params.cls);
-    if(params.hostelOnly==='true') s=s.filter(x=>x.hasHostel);
-    return {students:s};
-  }
-  if (action === 'getHostelStudents') return {students:DEMO_STUDENTS.filter(s=>s.hasHostel).map(s=>({...s,payModes:'Cash'}))};
-  if (action === 'getSiblings') {
-    const families = buildFamilyGroupsJS(DEMO_STUDENTS);
-    return {families};
-  }
-  if (action === 'getFeeRegister') {
-    let r=[...DEMO_RECORDS];
-    const q=(params.search||'').toLowerCase();
-    if(q) r=r.filter(x=>x.name.toLowerCase().includes(q)||x.rno.includes(q));
-    if(params.feeType) r=r.filter(x=>x.fee_type===params.feeType);
-    return {records:r,total:r.length,page:0,pageSize:25};
-  }
-  if (action === 'getStudentHistory') {
-    const q = (params.query||'').toLowerCase().trim();
-    const m = (params.mother||'').toLowerCase().trim();
-    // Strict: name must match exactly, mother must match exactly
-    const matched = DEMO_STUDENTS.filter(s =>
-      s.name.toLowerCase() === q &&
-      (s.mother||'').toLowerCase() === m
-    );
-    if (!matched.length) return {students:[]};
-    return {students:matched.map(s=>({
-      ...s,
-      receipts:DEMO_RECORDS.filter(r=>r.name===s.name).map(r=>({receiptNo:r.rno,date:r.date,feeType:r.fee_type,amount:r.amount,payMode:r.pay_mode})),
-      siblings:DEMO_STUDENTS.filter(x=>{
-        if(x.name===s.name) return false;
-        const fM = s.father && x.father && s.father.trim().toUpperCase()===x.father.trim().toUpperCase();
-        const mM = s.mother && x.mother && s.mother.trim().toUpperCase()===x.mother.trim().toUpperCase();
-        return fM && mM;
-      }).map(x=>({name:x.name,class:x.class}))
-    }))};
-  }
-  if (action === 'addStudent') {
-    // Demo: pretend success
-    return {success:true, message:'Student "'+params.studentName+'" registered successfully (demo mode — connect Google Sheets to save permanently)'};
-  }
-  if (action === 'addFeeEntry') {
-    return {success:true, rowsAdded:1, receiptNo:params.receiptNo, message:'Fee entry saved (demo mode — connect Google Sheets to save permanently)'};
-  }
-  if (action === 'getLastReceiptNo') {
-    const maxRno = Math.max(...DEMO_RECORDS.map(r=>parseInt(r.rno)||0), 200);
-    return { lastReceiptNo: maxRno, nextReceiptNo: maxRno + 1 };
-  }
-  if (action === 'checkDuplicateReceipt') {
-    const byRno = DEMO_RECORDS.filter(r=>r.rno===params.receiptNo);
-    if (byRno.length) return {duplicate:true, type:'receiptNo', message:'Receipt #'+params.receiptNo+' already exists for: '+byRno[0].name};
-    if (params.studentName && params.feeType && params.feeType!=='Other') {
-      const existing = DEMO_RECORDS.filter(r=>r.name===params.studentName && r.fee_type===params.feeType);
-      if (existing.length) return {duplicate:true, type:'studentFee', message:params.studentName+' already paid '+params.feeType+' (Receipt #'+existing[0].rno+')'};
-    }
-    return {duplicate:false};
-  }
-  return {error:'Unknown action in demo mode'};
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// AUTH
-// ═══════════════════════════════════════════════════════════════════
-function setRole(r) {
-  CURRENT_ROLE = r;
-  document.getElementById('tab-admin').classList.toggle('active', r==='admin');
-  document.getElementById('tab-student').classList.toggle('active', r==='student');
-  document.getElementById('admin-fields').style.display = r==='admin'?'':'none';
-  document.getElementById('student-fields').style.display = r==='student'?'':'none';
-  document.getElementById('login-hint').style.display = r==='admin'?'block':'none';
-  const sh = document.getElementById('student-hint');
-  if (sh) sh.style.display = r==='student'?'inline':'none';
-}
-
-async function doLogin() {
-  const btn = document.getElementById('login-btn');
-  const err = document.getElementById('login-error');
-  err.style.display = 'none';
-  btn.disabled = true; btn.textContent = 'Signing in…';
-  try {
-    let params;
-    if (CURRENT_ROLE === 'admin') {
-      params = {action:'login',role:'admin',username:document.getElementById('uname').value.trim(),password:document.getElementById('upass').value.trim()};
-    } else {
-      const sName = document.getElementById('student-name-input').value.trim();
-      const sMother = document.getElementById('student-mother-input').value.trim();
-      if (!sName || !sMother) {
-        err.textContent = 'Please enter both Student Name and Mother\'s Name';
-        err.style.display = 'block';
-        btn.disabled = false; btn.textContent = 'Sign In →';
-        return;
-      }
-      params = {action:'login',role:'student',studentName:sName,motherName:sMother};
-    }
-    const res = await api(params);
-    if (res.success) {
-      SESSION_TOKEN  = res.token || '';
-      CURRENT_USER   = res.user;
-      CURRENT_MOTHER = res.motherName || '';
-      studentQuery   = res.studentQuery || '';
-      launchApp(res.role);
-    } else {
-      err.textContent = res.error || 'Login failed';
-      err.style.display = 'block';
-    }
-  } catch(e) {
-    err.textContent = 'Connection error: ' + e.message;
-    err.style.display = 'block';
-  }
-  btn.disabled = false; btn.textContent = 'Sign In →';
-}
-
-function doLogout() {
-  SESSION_TOKEN = ''; CURRENT_USER = ''; CURRENT_MOTHER = ''; stuPage=0; regPage=0;
-  _studentCache = null;
-  if(chartMonthly){chartMonthly.destroy();chartMonthly=null;}
-  if(chartDonut){chartDonut.destroy();chartDonut=null;}
-  document.getElementById('app').style.display='none';
-  document.getElementById('login-screen').classList.remove('hidden');
-  document.getElementById('upass').value='';
-  const mi2 = document.getElementById('student-mother-input'); if(mi2) mi2.value='';
-  const si2 = document.getElementById('student-name-input'); if(si2) si2.value='';
-  document.getElementById('login-error').style.display='none';
-}
-
-function launchApp(role) {
-  document.getElementById('login-screen').classList.add('hidden');
-  document.getElementById('app').style.display='block';
-  document.getElementById('role-badge').textContent = role==='admin'?'Admin':'Student';
-  document.getElementById('role-badge').className = 'role-badge '+role;
-  document.getElementById('user-display').textContent = CURRENT_USER;
-  buildNav(role);
-  if (role==='admin') showPage('dashboard');
-  else { showPage('history'); }
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// NAV
-// ═══════════════════════════════════════════════════════════════════
-function buildNav(role) {
-  const pages = role==='admin'
-    ? [{id:'dashboard',l:'📊 Dashboard'},{id:'students',l:'👥 Students'},{id:'hostel',l:'🏠 Hostel'},{id:'siblings',l:'👨‍👧‍👦 Siblings'},{id:'register',l:'📋 Fee Register'},{id:'admit',l:'➕ Admit Student'},{id:'feepay',l:'💳 Collect Fee'}]
-    : [{id:'history',l:'📄 Fee History'},{id:'report',l:'📋 Report Card'},{id:'payment',l:'💳 Pay Fee Online'},{id:'notices',l:'📢 Notices'}];
-  document.getElementById('nav-tabs').innerHTML = pages.map(p=>
-    `<button class="nav-tab" onclick="showPage('${p.id}')" id="nav-${p.id}">${p.l}</button>`
-  ).join('');
-}
-
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('page-'+id)?.classList.add('active');
-  document.getElementById('nav-'+id)?.classList.add('active');
-  if(id==='dashboard') loadDashboard();
-  if(id==='students')  loadStudents();
-  if(id==='hostel')    loadHostel();
-  if(id==='siblings')  loadSiblings();
-  if(id==='register')  loadRegister();
-  if(id==='admit')     loadAdmitPage();
-  if(id==='feepay')    loadFeePayPage();
-  if(id==='history')   renderHistoryPage();
-  if(id==='report')    renderReportPage();
-  if(id==='payment')   renderPaymentPage();
-  if(id==='notices')   renderNoticesPage();
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// DASHBOARD
-// ═══════════════════════════════════════════════════════════════════
-async function loadDashboard() {
-  const el = document.getElementById('page-dashboard');
-  el.innerHTML = loader();
-  try {
-    const d = await api({action:'getDashboard',token:SESSION_TOKEN});
-    renderDashboard(d);
-  } catch(e) { el.innerHTML = errorBox(e.message); }
-}
-
-function renderDashboard(d) {
-  const s = d.summary, ft = d.feeTotals, mo = d.monthly;
-  const total = s.totalCollected;
-  const el = document.getElementById('page-dashboard');
-  el.innerHTML = `
-  <div class="kpi-grid">
-    ${kpi('👥','Total Students',s.totalStudents,'Enrolled 2025-26','cyan',false)}
-    ${kpi('💰','Total Collected','₹'+fmt(total),'All fee types','gold',true)}
-    ${kpi('🏠','Hostel Students',s.hostelStudents,'With hostel fee','purple',false)}
-    ${kpi('🛏️','Hostel Revenue','₹'+fmt(s.hostelCollected),'Hostel total','purple',true)}
-    ${kpi('📚','School Fee','₹'+fmt(s.schoolCollected),'Session total','green',true)}
-    ${kpi('📝','Admission Fee','₹'+fmt(s.admissionCollected),'New admissions','cyan',true)}
-  </div>
-  <div class="charts-grid">
-    <div class="chart-card">
-      <div class="chart-title"><span class="dot" style="background:var(--accent)"></span>Monthly Fee Collection</div>
-      <div class="chart-wrap"><canvas id="chart-monthly"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title"><span class="dot" style="background:var(--accent2)"></span>Fee Type Breakdown</div>
-      <div class="chart-wrap"><canvas id="chart-donut"></canvas></div>
-    </div>
-  </div>
-  <div class="fee-bars">
-    ${Object.entries(ft).map(([k,v])=>`
-    <div class="fee-bar-item">
-      <div class="fee-bar-header"><span class="fee-bar-label">${k}</span><span class="fee-bar-amount">₹${fmt(v)}</span></div>
-      <div class="fee-bar-track"><div class="fee-bar-fill" style="width:${(v/total*100).toFixed(1)}%;background:${feeColor(k)}"></div></div>
-      <div style="font-size:11px;color:var(--muted);margin-top:5px">${(v/total*100).toFixed(1)}% of total collection</div>
-    </div>`).join('')}
-  </div>`;
-
-  // Monthly chart
-  const months = Object.keys(mo);
-  const vals   = Object.values(mo);
-  const ctx1 = document.getElementById('chart-monthly').getContext('2d');
-  if(chartMonthly) chartMonthly.destroy();
-  chartMonthly = new Chart(ctx1,{type:'bar',data:{
-    labels:months.map(m=>{const[y,mo2]=m.split('-');return ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+mo2]+"'"+(y.slice(2))}),
-    datasets:[{data:vals,backgroundColor:vals.map((_,i)=>`hsl(${200+i*14},65%,55%)`),borderRadius:6,borderSkipped:false}]
-  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'₹'+fmt(c.parsed.y)}}},
-    scales:{x:{grid:{color:'rgba(255,255,255,.03)'},ticks:{color:'#64748b',font:{size:10}}},
-            y:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#64748b',font:{size:10},callback:v=>'₹'+fmt(v)}}}}});
-
-  // Donut
-  const ctx2 = document.getElementById('chart-donut').getContext('2d');
-  if(chartDonut) chartDonut.destroy();
-  chartDonut = new Chart(ctx2,{type:'doughnut',data:{
-    labels:Object.keys(ft),
-    datasets:[{data:Object.values(ft),backgroundColor:['#f59e0b','#06b6d4','#10b981','#8b5cf6'],borderWidth:0,hoverOffset:6}]
-  },options:{responsive:true,maintainAspectRatio:false,cutout:'64%',
-    plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',font:{size:11},padding:12}},
-             tooltip:{callbacks:{label:c=>c.label+': ₹'+fmt(c.raw)}}}}});
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// STUDENTS TABLE
-// ═══════════════════════════════════════════════════════════════════
-const PAGE_SZ = 20;
-let allClasses = [];
-
-function renderStudentsPage() {
-  document.getElementById('page-students').innerHTML = `
-  <div class="table-wrap">
-    <div class="table-toolbar">
-      <input class="search-box" id="stu-search" placeholder="Search by name or father…" oninput="debounce(loadStudents,400)()"/>
-      <select class="filter-select" id="stu-class" onchange="loadStudents()">
-        <option value="">All Classes</option>
-        ${allClasses.map(c=>`<option>${c}</option>`).join('')}
-      </select>
-      <button class="hostel-toggle ${hostelOnly?'active':''}" id="hostel-tog" onclick="toggleHostel()">🏠 Hostel Only</button>
-      <span class="tcount" id="stu-count"></span>
-    </div>
-    <div style="overflow-x:auto"><table>
-      <thead><tr><th>#</th><th>Student Name</th><th>Father's Name</th><th>Class</th><th>Admission</th><th>Tuition</th><th>School</th><th>Hostel</th><th>Other</th><th>Total Paid</th></tr></thead>
-      <tbody id="stu-tbody"></tbody>
-    </table></div>
-    <div class="pager">
-      <span id="stu-pinfo"></span>
-      <div class="pager-btns">
-        <button class="pbtn" onclick="stuPage--;loadStudents()" id="stu-prev">← Prev</button>
-        <button class="pbtn" onclick="stuPage++;loadStudents()" id="stu-next">Next →</button>
-      </div>
-    </div>
-  </div>`;
-}
-
-async function loadStudents() {
-  if (!document.getElementById('stu-tbody')) renderStudentsPage();
-  const search = document.getElementById('stu-search')?.value||'';
-  const cls    = document.getElementById('stu-class')?.value||'';
-  try {
-    const d = await api({action:'getStudents',token:SESSION_TOKEN,search,cls,hostelOnly:hostelOnly?'true':'false',page:stuPage});
-    stuData = d.students || [];
-    if (!allClasses.length) {
-      allClasses = [...new Set(stuData.map(s=>s.class))].sort(classOrd);
-      renderStudentsPage();
-    }
-    const start = stuPage*PAGE_SZ, slice = stuData.slice(start,start+PAGE_SZ);
-    document.getElementById('stu-count').textContent = stuData.length+' student(s)';
-    document.getElementById('stu-pinfo').textContent = `Showing ${start+1}–${Math.min(start+PAGE_SZ,stuData.length)} of ${stuData.length}`;
-    document.getElementById('stu-prev').disabled = stuPage===0;
-    document.getElementById('stu-next').disabled = start+PAGE_SZ>=stuData.length;
-    document.getElementById('stu-tbody').innerHTML = slice.map((s,i)=>`<tr>
-      <td style="color:var(--muted);font-size:11px">${start+i+1}</td>
-      <td><div style="font-weight:500">${s.name}</div>${s.hasHostel?'<div class="htag" style="margin-top:3px">🏠 Hostel</div>':''}</td>
-      <td style="color:var(--muted)">${s.father}</td>
-      <td><span class="cbadge">${s.class}</span></td>
-      <td class="${s.admission>0?'ac':'zc'}">${s.admission>0?'₹'+fmt(s.admission):'—'}</td>
-      <td class="${s.tuition>0?'ac':'zc'}">${s.tuition>0?'₹'+fmt(s.tuition):'—'}</td>
-      <td class="${s.school>0?'ac':'zc'}">${s.school>0?'₹'+fmt(s.school):'—'}</td>
-      <td class="${s.hostel>0?'ac':'zc'}" style="${s.hostel>0?'color:var(--hostel)':''}">${s.hostel>0?'₹'+fmt(s.hostel):'—'}</td>
-      <td class="${s.other>0?'ac':'zc'}">${s.other>0?'₹'+fmt(s.other):'—'}</td>
-      <td style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--accent)">₹${fmt(s.total)}</td>
-    </tr>`).join('');
-  } catch(e) { document.getElementById('page-students').innerHTML=errorBox(e.message); }
-}
-
-function toggleHostel() {
-  hostelOnly=!hostelOnly; stuPage=0;
-  document.getElementById('hostel-tog')?.classList.toggle('active',hostelOnly);
-  loadStudents();
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// HOSTEL
-// ═══════════════════════════════════════════════════════════════════
-async function loadHostel() {
-  const el = document.getElementById('page-hostel');
-  el.innerHTML = loader();
-  try {
-    const d = await api({action:'getHostelStudents',token:SESSION_TOKEN});
-    const ss = d.students || [];
-    const totalH = ss.reduce((a,s)=>a+s.hostel,0);
-    const avg = ss.length ? totalH/ss.length : 0;
-    const clsDist = {};
-    ss.forEach(s=>{clsDist[s.class]=(clsDist[s.class]||0)+1;});
-    const topCls = Object.entries(clsDist).sort((a,b)=>b[1]-a[1])[0];
-
-    el.innerHTML = `
-    <div class="hostel-stats">
-      <div class="hstat"><div class="val">${ss.length}</div><div class="lbl">Total Hostel Students</div></div>
-      <div class="hstat"><div class="val">₹${fmt(totalH)}</div><div class="lbl">Total Hostel Collected</div></div>
-      <div class="hstat"><div class="val">₹${fmt(Math.round(avg))}</div><div class="lbl">Average per Student</div></div>
-      <div class="hstat"><div class="val">${topCls?topCls[0]:'—'}</div><div class="lbl">Top Class</div></div>
-    </div>
-    <div class="shdr"><div><div class="stitle">Hostel Students</div><div class="ssub">All ${ss.length} students paying hostel fee</div></div></div>
-    <div class="table-wrap">
-      <div style="overflow-x:auto"><table>
-        <thead><tr><th>#</th><th>Student Name</th><th>Father</th><th>Class</th><th>Hostel Fee</th><th>School Fee</th><th>Total Paid</th><th>Pay Mode</th></tr></thead>
-        <tbody>${ss.map((s,i)=>`<tr>
-          <td style="color:var(--muted);font-size:11px">${i+1}</td>
-          <td style="font-weight:500">${s.name}</td>
-          <td style="color:var(--muted)">${s.father}</td>
-          <td><span class="cbadge">${s.class}</span></td>
-          <td style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--hostel);font-weight:700">₹${fmt(s.hostel)}</td>
-          <td class="${s.school>0?'ac':'zc'}">${s.school>0?'₹'+fmt(s.school):'—'}</td>
-          <td style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--accent)">₹${fmt(s.total)}</td>
-          <td style="font-size:11px;color:var(--muted)">${s.payModes||'Cash'}</td>
-        </tr>`).join('')}</tbody>
-      </table></div>
-    </div>`;
-  } catch(e) { el.innerHTML = errorBox(e.message); }
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// SIBLINGS
-// ═══════════════════════════════════════════════════════════════════
-async function loadSiblings() {
-  const el = document.getElementById('page-siblings');
-  el.innerHTML = loader();
-  try {
-    const d = await api({action:'getSiblings',token:SESSION_TOKEN});
-    const families = d.families || [];
-    el.innerHTML = `
-    <div class="shdr"><div><div class="stitle">Sibling Families</div><div class="ssub">${families.length} families with multiple children — grouped by matching father <strong>or</strong> mother name</div></div></div>
-    <div class="siblings-grid">${families.map(f=>`
-      <div class="sib-card">
-        <div class="sib-father">${f.father}<span class="sib-fc">${f.count} children</span></div>
-        ${f.mother?`<div style="font-size:12px;color:var(--muted);margin-bottom:2px">Mother: ${f.mother}</div>`:''}
-        <div class="sib-total">Family total: ₹${fmt(f.familyTotal)}</div>
-        <div class="sib-children">${f.children.map(c=>{
-          const childTotal = Number(c.total || c.totalPaid || 0) || 0;
-          return `
-          <div class="sib-child">
-            <div><div class="cn">${c.name}</div><div class="cm">Class ${c.class}${c.hasHostel?' · 🏠 Hostel':''}</div></div>
-            <div class="ct">₹${fmt(childTotal)}</div>
-          </div>`
-        }).join('')}
-        </div>
-      </div>`).join('')}
-    </div>`;
-  } catch(e) { el.innerHTML = errorBox(e.message); }
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// FEE REGISTER
-// ═══════════════════════════════════════════════════════════════════
-function renderRegisterPage() {
-  document.getElementById('page-register').innerHTML = `
-  <div class="table-wrap">
-    <div class="table-toolbar">
-      <input class="search-box" id="reg-search" placeholder="Search by name or receipt #…" oninput="debounce(loadRegister,400)()"/>
-      <select class="filter-select" id="reg-feetype" onchange="regPage=0;loadRegister()">
-        <option value="">All Fee Types</option>
-        <option>Admission Fee</option><option>Tuition Fee</option><option>School Fee</option>
-        <option>Hostel Fee</option><option>Stationary Charge</option><option>Other</option>
-      </select>
-      <span class="tcount" id="reg-count"></span>
-    </div>
-    <div style="overflow-x:auto"><table>
-      <thead><tr><th>Receipt</th><th>Date</th><th>Student</th><th>Father</th><th>Class</th><th>Fee Type</th><th>Amount</th><th>Mode</th><th>Received By</th></tr></thead>
-      <tbody id="reg-tbody"></tbody>
-    </table></div>
-    <div class="pager">
-      <span id="reg-pinfo"></span>
-      <div class="pager-btns">
-        <button class="pbtn" onclick="regPage--;loadRegister()" id="reg-prev">← Prev</button>
-        <button class="pbtn" onclick="regPage++;loadRegister()" id="reg-next">Next →</button>
-      </div>
-    </div>
-  </div>`;
-}
-
-const FCLRS = {'Hostel Fee':'var(--hostel)','Admission Fee':'var(--accent)','School Fee':'var(--accent3)','Tuition Fee':'var(--accent2)'};
-
-async function loadRegister() {
-  if (!document.getElementById('reg-tbody')) renderRegisterPage();
-  const search  = document.getElementById('reg-search')?.value||'';
-  const feeType = document.getElementById('reg-feetype')?.value||'';
-  try {
-    const d = await api({action:'getFeeRegister',token:SESSION_TOKEN,search,feeType,page:regPage});
-    const recs=d.records||[], tot=d.total||recs.length;
-    const start=regPage*PAGE_SZ;
-    document.getElementById('reg-count').textContent=tot+' record(s)';
-    document.getElementById('reg-pinfo').textContent=`Showing ${start+1}–${Math.min(start+PAGE_SZ,tot)} of ${tot}`;
-    document.getElementById('reg-prev').disabled=regPage===0;
-    document.getElementById('reg-next').disabled=start+PAGE_SZ>=tot;
-    const fld = r=>r.fee_type||r.feeType||'';
-    const amt  = r=>r.amount||0;
-    const mode = r=>r.pay_mode||r.payMode||'';
-    const recv = r=>r.recv_by||r.receivedBy||'';
-    document.getElementById('reg-tbody').innerHTML=recs.map(r=>`<tr>
-      <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">#${r.rno||r.receiptNo}</td>
-      <td style="font-size:12px;color:var(--muted)">${r.date}</td>
-      <td style="font-weight:500">${r.name||r.studentName}</td>
-      <td style="color:var(--muted);font-size:12px">${r.father||r.fatherName}</td>
-      <td><span class="cbadge">${r.class}</span></td>
-      <td><span style="font-size:12px;color:${FCLRS[fld(r)]||'var(--text)'}">${fld(r)}</span></td>
-      <td style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent3);font-weight:600">₹${fmt(amt(r))}</td>
-      <td style="font-size:11px;color:var(--muted)">${mode(r)}</td>
-      <td style="font-size:11px;color:var(--muted)">${recv(r)}</td>
-    </tr>`).join('');
-  } catch(e) { document.getElementById('page-register').innerHTML=errorBox(e.message); }
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// STUDENT HISTORY
-// ═══════════════════════════════════════════════════════════════════
-function renderHistoryPage() {
-  const el = document.getElementById('page-history');
-  el.innerHTML = `<div id="hist-result">${loader()}</div>`;
-  // Auto-load using login credentials
-  loadStudentHistory(CURRENT_USER, CURRENT_MOTHER);
-}
-
-async function loadStudentHistory(name, mother) {
-  const el = document.getElementById('hist-result');
-  if (!el) return;
-  el.innerHTML = loader();
-  try {
-    const d = await api({action:'getStudentHistory', query:name, mother:mother});
-    const students = d.students||[];
-    if (!students.length) {
-      el.innerHTML = `<div class="empty" style="padding:60px;text-align:center">
-        <div style="font-size:40px;margin-bottom:12px">🔍</div>
-        <div style="font-size:15px;margin-bottom:6px">No fee records found</div>
-        <div style="font-size:12px;color:var(--muted)">Records for <strong>${name}</strong> are not yet in the system.<br>Please contact school office.</div>
-      </div>`;
-      return;
-    }
-    renderStudentProfileHTML(el, students);
-  } catch(e){ el.innerHTML=errorBox(e.message); }
-}
-
-// kept for backward compat (admin might call it)
-async function searchHistory() {
-  const q = CURRENT_USER;
-  const m = CURRENT_MOTHER;
-  if (!q) return;
-  const el = document.getElementById('hist-result');
-  if (!el) return;
-  el.innerHTML = loader();
-  try {
-    const d = await api({action:'getStudentHistory', query:q, mother:m});
-    const students = d.students||[];
-    if (!students.length) { el.innerHTML='<div class="empty">No records found.</div>'; return; }
-    renderStudentProfileHTML(el, students);
-  } catch(e){ el.innerHTML=errorBox(e.message); }
-}
-
-// ── Shared student profile renderer ──────────────────────────────
-function renderStudentProfileHTML(el, students) {
-  let html = '';
-  students.forEach(s => {
-    const initials = s.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-    // Student info card
-    html += `
-    <div class="sprofile">
-      <div class="sph">
-        <div class="spav">${initials}</div>
-        <div>
-          <div class="spname">${s.name}</div>
-          <div class="spmeta">
-            Father: ${s.father||'—'} &nbsp;·&nbsp;
-            Mother: ${s.mother||'—'} &nbsp;·&nbsp;
-            Class ${s.class}
-            ${s.hasHostel?' &nbsp;·&nbsp; 🏠 Hostel':''}
-            ${s.mobile?` &nbsp;·&nbsp; 📱 ${s.mobile}`:''}
-          </div>
-        </div>
-      </div>`;
-
-    // siblings notice
-    if (s.siblings && s.siblings.length > 0) {
-      html += `<div class="sib-notice" style="margin:0 0 14px">
-        <div class="ni">👨‍👧‍👦</div>
-        <div>
-          <div class="nt">Sibling(s) found — Father: ${s.father}${s.mother?' · Mother: '+s.mother:''}</div>
-          <div class="sib-chips" style="margin-top:6px">${s.siblings.map(x=>`<span class="chip">${x.name} · Class ${x.class}</span>`).join('')}</div>
-        </div>
-      </div>`;
-    }
-
-    html += `
-      <div class="fee-pills">
-        ${s.admission>0?`<div class="pill paid"><div class="pl">Admission</div><div class="pv">₹${fmt(s.admission)}</div></div>`:''}
-        ${s.tuition>0?`<div class="pill paid"><div class="pl">Tuition</div><div class="pv">₹${fmt(s.tuition)}</div></div>`:''}
-        ${s.school>0?`<div class="pill paid"><div class="pl">School Fee</div><div class="pv">₹${fmt(s.school)}</div></div>`:''}
-        ${s.hostel>0?`<div class="pill hostel"><div class="pl">Hostel</div><div class="pv">₹${fmt(s.hostel)}</div></div>`:''}
-        ${s.stationary>0?`<div class="pill paid"><div class="pl">Stationary</div><div class="pv">₹${fmt(s.stationary)}</div></div>`:''}
-        <div class="pill total"><div class="pl">Total Paid</div><div class="pv">₹${fmt(s.total)}</div></div>
-      </div>
-    </div>
-    <div class="receipt-list">
-      ${(s.receipts||[]).length===0
-        ? '<div class="empty">No payment records found.</div>'
-        : (s.receipts||[]).map(r=>`<div class="ritem">
-            <div>
-              <div class="rno">Receipt #${r.receiptNo} · ${r.payMode}</div>
-              <div class="rtype">${r.feeType}</div>
-              <div class="rdate">${r.date}</div>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px">
-              <div class="ramt">₹${fmt(r.amount)}</div>
-              <button onclick="printReceipt(${JSON.stringify(r).replace(/"/g,'&quot;')},${JSON.stringify(s).replace(/"/g,'&quot;')})"
-                style="padding:5px 10px;background:rgba(6,182,212,.15);border:1px solid rgba(6,182,212,.3);border-radius:7px;color:var(--accent2);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap">🖨 Print</button>
-            </div>
-          </div>`).join('')}
-    </div>
-    <div style="margin-bottom:20px"></div>`;
-  });
-  el.innerHTML = html;
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// ADMIT STUDENT PAGE
-// ═══════════════════════════════════════════════════════════════════
-function loadAdmitPage() {
-  document.getElementById('page-admit').innerHTML = `
-  <div style="max-width:680px;margin:0 auto">
-    <div class="shdr" style="margin-bottom:20px">
-      <div><div class="stitle">Admit New Student</div><div class="ssub">Register a student into Student Master</div></div>
-    </div>
-    <div class="form-card" id="admit-card">
-      <div class="form-section-title">👤 Student Information</div>
-      <div class="form-grid">
-        <div class="fg"><label class="fl">Student Full Name <span class="req">*</span></label>
-          <input class="fi" id="ad-name" type="text" placeholder="e.g. Rahul Kumar"/></div>
-        <div class="fg"><label class="fl">Father's Name <span class="req">*</span></label>
-          <input class="fi" id="ad-father" type="text" placeholder="e.g. Suresh Kumar"/></div>
-        <div class="fg"><label class="fl">Mother's Name</label>
-          <input class="fi" id="ad-mother" type="text" placeholder="e.g. Sunita Devi"/></div>
-        <div class="fg"><label class="fl">Class <span class="req">*</span></label>
-          <select class="fi" id="ad-class">
-            <option value="">Select Class</option>
-            <option>Nursery</option><option>LKG</option><option>UKG</option>
-            <option>1st</option><option>2nd</option><option>3rd</option><option>4th</option>
-            <option>5th</option><option>6th</option><option>7th</option><option>8th</option>
-            <option>9th</option><option>10th</option><option>11th</option><option>12th</option>
-          </select></div>
-        <div class="fg"><label class="fl">Date of Birth</label>
-          <input class="fi" id="ad-dob" type="date"/></div>
-        <div class="fg"><label class="fl">Gender</label>
-          <select class="fi" id="ad-gender">
-            <option value="">Select</option><option>Male</option><option>Female</option><option>Other</option>
-          </select></div>
-        <div class="fg"><label class="fl">Mobile No.</label>
-          <input class="fi" id="ad-mobile" type="tel" placeholder="Parent mobile number"/></div>
-        <div class="fg"><label class="fl">Admission Date <span class="req">*</span></label>
-          <input class="fi" id="ad-date" type="date"/></div>
-      </div>
-      <div class="form-section-title" style="margin-top:20px">🏠 Hostel & Address</div>
-      <div class="form-grid">
-        <div class="fg"><label class="fl">Hostel</label>
-          <select class="fi" id="ad-hostel">
-            <option value="No">No (Day Scholar)</option><option value="Yes">Yes (Hosteller)</option>
-          </select></div>
-        <div class="fg"><label class="fl">Village / Address</label>
-          <input class="fi" id="ad-address" type="text" placeholder="Village, District"/></div>
-        <div class="fg" style="grid-column:1/-1"><label class="fl">Notes / Remarks</label>
-          <input class="fi" id="ad-notes" type="text" placeholder="Any special notes"/></div>
-      </div>
-      <div id="admit-msg" style="display:none;margin-top:16px"></div>
-      <div style="display:flex;gap:12px;margin-top:24px">
-        <button class="form-btn primary" onclick="submitAdmit()">✅ Register Student</button>
-        <button class="form-btn secondary" onclick="clearAdmit()">🗑 Clear Form</button>
-      </div>
-    </div>
-  </div>`;
-  // set today as default admission date
-  document.getElementById('ad-date').value = new Date().toISOString().slice(0,10);
-}
-
-async function submitAdmit() {
-  const name   = document.getElementById('ad-name').value.trim();
-  const father = document.getElementById('ad-father').value.trim();
-  const cls    = document.getElementById('ad-class').value;
-  const date   = document.getElementById('ad-date').value;
-  const msg    = document.getElementById('admit-msg');
-
-  if (!name)  { showFormMsg('admit-msg','error','Please enter Student Name'); return; }
-  if (!father){ showFormMsg('admit-msg','error','Please enter Father\'s Name'); return; }
-  if (!cls)   { showFormMsg('admit-msg','error','Please select Class'); return; }
-  if (!date)  { showFormMsg('admit-msg','error','Please select Admission Date'); return; }
-
-  const btn = document.querySelector('#admit-card .form-btn.primary');
-  btn.disabled=true; btn.textContent='Registering…';
-
-  try {
-    const d = await api({
-      action:'addStudent', token:SESSION_TOKEN,
-      studentName:name, fatherName:father, motherName:document.getElementById('ad-mother').value.trim(),
-      class:cls, dob:document.getElementById('ad-dob').value,
-      gender:document.getElementById('ad-gender').value,
-      mobile:document.getElementById('ad-mobile').value.trim(),
-      admissionDate:date, hostel:document.getElementById('ad-hostel').value,
-      address:document.getElementById('ad-address').value.trim(),
-      notes:document.getElementById('ad-notes').value.trim(),
-    });
-    if (d.success) {
-      showFormMsg('admit-msg','success','✅ '+name+' registered successfully!');
-      clearAdmit();
-    } else {
-      showFormMsg('admit-msg','error','❌ '+(d.error||'Registration failed'));
-    }
-  } catch(e) { showFormMsg('admit-msg','error','❌ '+e.message); }
-  btn.disabled=false; btn.textContent='✅ Register Student';
-}
-
-function clearAdmit() {
-  ['ad-name','ad-father','ad-mother','ad-mobile','ad-address','ad-notes'].forEach(id=>document.getElementById(id).value='');
-  ['ad-class','ad-gender'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('ad-hostel').value='No';
-  document.getElementById('ad-date').value=new Date().toISOString().slice(0,10);
-  document.getElementById('ad-dob').value='';
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// FEE COLLECTION FORM PAGE
-// ═══════════════════════════════════════════════════════════════════
-let feeFormReceipt = { data: null };
-
-// cached student list for suggestions (fetched once per session)
-let _studentCache = null;
-
-async function loadFeePayPage() {
-  const today = new Date().toISOString().slice(0,10);
-
-  // Render form immediately with a loading indicator for receipt no
-  document.getElementById('page-feepay').innerHTML = `
-  <div style="max-width:740px;margin:0 auto">
-    <div class="shdr" style="margin-bottom:20px">
-      <div><div class="stitle">Collect Fee</div><div class="ssub">Fill the form and generate a printable receipt</div></div>
-    </div>
-    <div class="form-card" id="fee-form-card">
-      <div class="form-section-title">🧾 Receipt Details</div>
-      <div class="form-grid">
-        <div class="fg"><label class="fl">Receipt No. <span class="req">*</span></label>
-          <div style="position:relative">
-            <input class="fi" id="ff-rno" type="number" value="" placeholder="Fetching…" onblur="checkReceiptNoDuplicate(this.value)" style="padding-right:70px"/>
-            <span id="rno-badge" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:10px;padding:2px 7px;border-radius:4px;background:rgba(245,158,11,.15);color:var(--accent);font-weight:700;pointer-events:none">LOADING</span>
-          </div>
-          <div id="rno-warn" style="display:none;font-size:11px;margin-top:4px;color:#fca5a5"></div>
-        </div>
-        <div class="fg"><label class="fl">Date <span class="req">*</span></label>
-          <input class="fi" id="ff-date" type="date" value="${today}"/></div>
-      </div>
-      <div class="form-section-title" style="margin-top:20px">👤 Student Details</div>
-      <div class="form-grid">
-        <div class="fg" style="position:relative">
-          <label class="fl">Student Name <span class="req">*</span></label>
-          <input class="fi" id="ff-name" type="text" placeholder="Type name to search…" oninput="suggestStudents(this.value)" autocomplete="off"/>
-          <div id="ff-suggest"></div>
-        </div>
-        <div class="fg"><label class="fl">Father's Name</label>
-          <input class="fi" id="ff-father" type="text" placeholder="Auto-filled on student select"/></div>
-        <div class="fg"><label class="fl">Class</label>
-          <select class="fi" id="ff-class">
-            <option value="">Select</option>
-            <option>Nursery</option><option>LKG</option><option>UKG</option>
-            <option>1st</option><option>2nd</option><option>3rd</option><option>4th</option>
-            <option>5th</option><option>6th</option><option>7th</option><option>8th</option>
-            <option>9th</option><option>10th</option><option>11th</option><option>12th</option>
-          </select></div>
-        <div class="fg"><label class="fl">Mobile No.</label>
-          <input class="fi" id="ff-mobile" type="tel" placeholder=""/></div>
-      </div>
-      <div class="form-section-title" style="margin-top:20px">💰 Fee Amounts</div>
-      <div class="form-grid">
-        <div class="fg"><label class="fl">Admission Fee (₹)</label>
-          <input class="fi" id="ff-admission" type="number" min="0" placeholder="0" oninput="updateFeeTotal()"/></div>
-        <div class="fg"><label class="fl">Tuition Fee (₹)</label>
-          <input class="fi" id="ff-tuition" type="number" min="0" placeholder="0" oninput="updateFeeTotal()"/></div>
-        <div class="fg"><label class="fl">School Fee (₹)</label>
-          <input class="fi" id="ff-school" type="number" min="0" placeholder="0" oninput="updateFeeTotal()"/></div>
-        <div class="fg"><label class="fl">Hostel Fee (₹)</label>
-          <input class="fi" id="ff-hostel" type="number" min="0" placeholder="0" oninput="updateFeeTotal()"/></div>
-        <div class="fg"><label class="fl">Stationary (₹)</label>
-          <input class="fi" id="ff-stationary" type="number" min="0" placeholder="0" oninput="updateFeeTotal()"/></div>
-        <div class="fg"><label class="fl">Other (₹)</label>
-          <input class="fi" id="ff-other" type="number" min="0" placeholder="0" oninput="updateFeeTotal()"/></div>
-      </div>
-      <div class="fee-total-bar">
-        <span>Total Amount</span>
-        <span id="ff-total" style="font-family:'JetBrains Mono',monospace;font-size:20px;color:var(--accent)">₹0</span>
-      </div>
-      <div class="form-grid" style="margin-top:16px">
-        <div class="fg"><label class="fl">Payment Mode <span class="req">*</span></label>
-          <select class="fi" id="ff-paymode">
-            <option>Cash</option><option>PhonePe</option><option>A/C Transfer</option>
-            <option>CRGB</option><option>SBI Transfer</option><option>Other</option>
-          </select></div>
-        <div class="fg"><label class="fl">Received By <span class="req">*</span></label>
-          <select class="fi" id="ff-recvby">
-            <option>Parmeshwar</option><option>Chandrasen Yadav</option><option>Roshni</option>
-            <option>Pathak Sir</option><option>Other</option>
-          </select></div>
-        <div class="fg" style="grid-column:1/-1"><label class="fl">Amount in Words</label>
-          <input class="fi" id="ff-inwords" type="text" placeholder="e.g. Five Thousand Rupees Only"/></div>
-        <div class="fg" style="grid-column:1/-1"><label class="fl">Remarks</label>
-          <input class="fi" id="ff-remarks" type="text" placeholder="Optional remarks"/></div>
-      </div>
-      <div id="feepay-msg" style="display:none;margin-top:14px"></div>
-      <div style="display:flex;gap:12px;margin-top:22px;flex-wrap:wrap">
-        <button class="form-btn primary" onclick="submitFeeEntry()">💾 Save & Generate Receipt</button>
-        <button class="form-btn blue" id="ff-print-btn" onclick="printFeeReceipt()" style="display:none">🖨 Print Receipt</button>
-        <button class="form-btn secondary" onclick="clearFeeForm()">🗑 Clear</button>
-      </div>
-    </div>
-  </div>`;
-
-  // Now fetch receipt no AND student cache in parallel
-  const [rnoResult, stuResult] = await Promise.allSettled([
-    api({action:'getLastReceiptNo'}),
-    api({action:'getStudents', token:SESSION_TOKEN, search:'', cls:'', hostelOnly:'false'})
-  ]);
-
-  // Update receipt no field with live value
-  const rnoField = document.getElementById('ff-rno');
-  const rnoBadge = document.getElementById('rno-badge');
-  if (rnoField) {
-    if (rnoResult.status === 'fulfilled' && rnoResult.value.nextReceiptNo) {
-      rnoField.value = rnoResult.value.nextReceiptNo;
-      rnoBadge.textContent = 'AUTO';
-      rnoBadge.style.background = 'rgba(16,185,129,.15)';
-      rnoBadge.style.color = 'var(--accent3)';
-    } else {
-      // fallback: use max from demo + 1 but show warning
-      rnoField.value = Math.max(...DEMO_RECORDS.map(r=>parseInt(r.rno)||0), 200) + 1;
-      rnoBadge.textContent = 'OFFLINE';
-      rnoBadge.style.background = 'rgba(239,68,68,.15)';
-      rnoBadge.style.color = 'var(--danger)';
-    }
-  }
-
-  // Cache student list for suggestions
-  if (stuResult.status === 'fulfilled' && stuResult.value.students) {
-    _studentCache = stuResult.value.students;
-  } else {
-    _studentCache = DEMO_STUDENTS;
-  }
-}
-
-function suggestStudents(q) {
-  const box = document.getElementById('ff-suggest');
-  if (!box) return;
-  if (!q || q.length < 1) { box.innerHTML=''; return; }
-
-  // Use live cache if available, else DEMO_STUDENTS
-  const pool = _studentCache || DEMO_STUDENTS;
-  const ql = q.toLowerCase();
-  const matches = pool.filter(s =>
-    s.name.toLowerCase().includes(ql) ||
-    (s.father||'').toLowerCase().includes(ql)
-  ).slice(0, 8);
-
-  if (!matches.length) { box.innerHTML=''; return; }
-
-  const feeIcons = {'admission':'📝','tuition':'📚','school':'🏫','hostel':'🏠'};
-
-  box.innerHTML = matches.map(s => {
-    // Show which fees already paid as small tags
-    const paidTags = Object.entries(feeIcons)
-      .filter(([k]) => (s[k]||0) > 0)
-      .map(([k,icon]) => `<span style="background:rgba(16,185,129,.1);color:#6ee7b7;padding:1px 5px;border-radius:3px;font-size:10px">${icon} ${k.charAt(0).toUpperCase()+k.slice(1)} ✓</span>`)
-      .join(' ');
-    const hostelTag = s.hasHostel ? `<span style="background:rgba(139,92,246,.1);color:#c4b5fd;padding:1px 5px;border-radius:3px;font-size:10px">🏠 Hostel</span>` : '';
-
-    return `<div onclick="selectStudent(${JSON.stringify(s).replace(/"/g,'&quot;')})"
-      style="padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .15s"
-      onmouseover="this.style.background='rgba(255,255,255,.06)'" onmouseout="this.style.background=''">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div style="font-weight:600;font-size:13px;color:var(--text)">${s.name}</div>
-        <span style="font-size:11px;background:rgba(6,182,212,.1);color:var(--accent2);padding:2px 7px;border-radius:4px">Class ${s.class}</span>
-      </div>
-      <div style="font-size:11px;color:var(--muted);margin-top:2px">Father: ${s.father||'—'}${s.mobile?' · 📱 '+s.mobile:''}</div>
-      ${paidTags||hostelTag ? `<div style="margin-top:5px;display:flex;gap:4px;flex-wrap:wrap">${paidTags}${hostelTag}</div>` : ''}
-    </div>`;
-  }).join('');
-}
-
-function selectStudent(s) {
-  document.getElementById('ff-name').value   = s.name;
-  document.getElementById('ff-father').value = s.father || '';
-  if (s.mobile) document.getElementById('ff-mobile').value = s.mobile;
-  const sel = document.getElementById('ff-class');
-  if (sel) {
-    for (let i=0; i<sel.options.length; i++) {
-      if (sel.options[i].value === s.class || sel.options[i].text === s.class) {
-        sel.selectedIndex = i; break;
-      }
-    }
-  }
-  const box = document.getElementById('ff-suggest');
-  if (box) box.innerHTML = '';
-  // trigger duplicate hint for this student
-  document.getElementById('ff-name').focus();
-  document.getElementById('ff-name').blur();
-}
-
-function updateFeeTotal() {
-  const ids=['ff-admission','ff-tuition','ff-school','ff-hostel','ff-stationary','ff-other'];
-  const total=ids.reduce((a,id)=>a+(parseFloat(document.getElementById(id)?.value)||0),0);
-  const el=document.getElementById('ff-total');
-  if(el) el.textContent='₹'+fmt(total);
-}
-
-function buildFamilyGroupsJS(students) {
-  const groups = {};
-
-  students.forEach(s => {
-    // Normalize names to Uppercase for consistent matching
-    const fName = (s.father || '').trim().toUpperCase();
-    const mName = (s.mother || '').trim().toUpperCase();
-
-    // CRITICAL: Only group if BOTH parents are known. 
-    // This prevents grouping all students who have blank fields.
-    if (!fName || !mName) return;
-
-    // Create a Strict Unique Key: "FATHER + MOTHER"
-    const familyKey = fName + " | " + mName;
-
-    if (!groups[familyKey]) {
-      groups[familyKey] = [];
-    }
-    groups[familyKey].push(s);
-  });
-
-  // Filter for real siblings (more than 1 child) and format for the UI
-  return Object.values(groups)
-    .filter(ss => ss.length > 1)
-    .sort((a, b) => b.length - a.length)
-    .map(children => {
-      const normalizedChildren = children.map(c => ({
-        ...c,
-        total: Number(c.total) || 0,
-        totalPaid: Number(c.totalPaid || c.total) || 0,
-        hasHostel: !!c.hasHostel
-      }));
-
-      return {
-        father: children[0].father || '—',
-        mother: children[0].mother || '',
-        count: children.length,
-        familyTotal: normalizedChildren.reduce((a, c) => a + c.total, 0),
-        children: normalizedChildren
-      };
-    });
-}
-// ── RECEIPT NO LIVE DUPLICATE CHECK ───────────────────────────────
-async function checkReceiptNoDuplicate(rno) {
-  if (!rno) return;
-  const warn = document.getElementById('rno-warn');
-  if (!warn) return;
-  try {
-    const d = await api({action:'checkDuplicateReceipt', token:SESSION_TOKEN, receiptNo:rno});
-    if (d.duplicate && d.type==='receiptNo') {
-      warn.style.display='block';
-      warn.textContent='⚠️ '+d.message;
-      document.getElementById('ff-rno').style.borderColor='var(--danger)';
-    } else {
-      warn.style.display='none';
-      document.getElementById('ff-rno').style.borderColor='';
-    }
-  } catch(e) { /* silent fail */ }
-}
-
-async function submitFeeEntry() {
-  const name   = document.getElementById('ff-name').value.trim();
-  const rno    = document.getElementById('ff-rno').value.trim();
-  const date   = document.getElementById('ff-date').value;
-  const cls    = document.getElementById('ff-class').value;
-  const feeIds = ['ff-admission','ff-tuition','ff-school','ff-hostel','ff-stationary','ff-other'];
-  const feeKeys= ['admission','tuition','school','hostel','stationary','other'];
-  const feeNames=['Admission Fee','Tuition Fee','School Fee','Hostel Fee','Stationary Charge','Other'];
-  const total  = feeIds.reduce((a,id)=>a+(parseFloat(document.getElementById(id)?.value)||0),0);
-
-  if (!rno)    { showFormMsg('feepay-msg','error','Please enter Receipt Number'); return; }
-  if (!date)   { showFormMsg('feepay-msg','error','Please select Date'); return; }
-  if (!name)   { showFormMsg('feepay-msg','error','Please enter Student Name'); return; }
-  if (total<=0){ showFormMsg('feepay-msg','error','Please enter at least one fee amount'); return; }
-
-  const btn=document.querySelector('#fee-form-card .form-btn.primary');
-  btn.disabled=true; btn.textContent='Checking duplicates…';
-
-  // ── Pre-save duplicate check ──────────────────────────────────
-  try {
-    // 1. Check receipt no duplicate
-    const rnoCheck = await api({action:'checkDuplicateReceipt', token:SESSION_TOKEN, receiptNo:rno});
-    if (rnoCheck.duplicate && rnoCheck.type==='receiptNo') {
-      const proceed = confirm('⚠️ Duplicate Receipt No!\n\n'+rnoCheck.message+'\n\nDo you want to proceed anyway?');
-      if (!proceed) { btn.disabled=false; btn.textContent='💾 Save & Generate Receipt'; return; }
-    }
-    // 2. Check each fee type for duplicate payment
-    const feeAmounts = feeIds.map((id,i)=>({name:feeNames[i],val:parseFloat(document.getElementById(id)?.value)||0}));
-    const paidFees   = feeAmounts.filter(f=>f.val>0 && f.name!=='Other');
-    const dupWarnings = [];
-    for (const fee of paidFees) {
-      const fc = await api({action:'checkDuplicateReceipt', token:SESSION_TOKEN, receiptNo:'__skip__', studentName:name, feeType:fee.name});
-      if (fc.duplicate && fc.type==='studentFee') dupWarnings.push(fc.message);
-    }
-    if (dupWarnings.length > 0) {
-      const proceed = confirm('⚠️ Possible Duplicate Payment!\n\n'+dupWarnings.join('\n')+'\n\nThis student may have already paid these fees.\nDo you want to save anyway?');
-      if (!proceed) { btn.disabled=false; btn.textContent='💾 Save & Generate Receipt'; return; }
-    }
-  } catch(e) { /* if check fails, allow save to continue */ }
-
-  btn.textContent='Saving…';
-
-  const payload = {
-    action:'addFeeEntry', token:SESSION_TOKEN,
-    receiptNo:rno, date, studentName:name,
-    fatherName:document.getElementById('ff-father').value.trim(),
-    class:cls,
-    mobile:document.getElementById('ff-mobile').value.trim(),
-    payMode:document.getElementById('ff-paymode').value,
-    receivedBy:document.getElementById('ff-recvby').value,
-    inWords:document.getElementById('ff-inwords').value.trim(),
-    remarks:document.getElementById('ff-remarks').value.trim(),
-  };
-  feeKeys.forEach((k,i)=>payload[k]=(parseFloat(document.getElementById(feeIds[i])?.value)||0));
-
-  try {
-    const d = await api(payload);
-    if (d.success||d.rowsAdded) {
-      showFormMsg('feepay-msg','success','✅ Fee saved! Receipt #'+rno+' generated.');
-      feeFormReceipt.data = {...payload, total};
-      document.getElementById('ff-print-btn').style.display='inline-flex';
-    } else {
-      showFormMsg('feepay-msg','error','❌ '+(d.error||'Save failed'));
-    }
-  } catch(e){ showFormMsg('feepay-msg','error','❌ '+e.message); }
-  btn.disabled=false; btn.textContent='💾 Save & Generate Receipt';
-}
-
-function clearFeeForm() {
-  ['ff-name','ff-father','ff-mobile','ff-inwords','ff-remarks'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
-  ['ff-admission','ff-tuition','ff-school','ff-hostel','ff-stationary','ff-other'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
-  const t=document.getElementById('ff-total'); if(t) t.textContent='₹0';
-  const pb=document.getElementById('ff-print-btn'); if(pb) pb.style.display='none';
-  feeFormReceipt.data=null;
-  document.getElementById('feepay-msg').style.display='none';
-}
-
-function printFeeReceipt() {
-  const d = feeFormReceipt.data;
-  if (!d) return;
-  openReceiptPrint({
-    receiptNo: d.receiptNo, date: d.date,
-    studentName: d.studentName, fatherName: d.fatherName, class: d.class,
-    feeType: 'Multiple', amount: d.total, payMode: d.payMode,
-    feeBreakdown: {
-      'Admission Fee': d.admission||0, 'Tuition Fee': d.tuition||0,
-      'School Fee': d.school||0, 'Hostel Fee': d.hostel||0,
-      'Stationary': d.stationary||0, 'Other': d.other||0,
-    },
-    inWords: d.inWords, receivedBy: d.receivedBy, remarks: d.remarks,
-  }, null);
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// RECEIPT PRINT (shared by history + fee form)
-// ═══════════════════════════════════════════════════════════════════
-function printReceipt(r, s) {
-  openReceiptPrint({
-    receiptNo: r.receiptNo, date: r.date,
-    studentName: s.name, fatherName: s.father, class: s.class,
-    feeType: r.feeType, amount: r.amount, payMode: r.payMode,
-    feeBreakdown: null, inWords:'', receivedBy:'', remarks:'',
-  }, s);
-}
-
-function openReceiptPrint(r, s) {
-  const breakdown = r.feeBreakdown
-    ? Object.entries(r.feeBreakdown).filter(([,v])=>v>0).map(([k,v])=>`
-        <tr><td style="padding:7px 12px;border-bottom:1px solid #e5e7eb">${k}</td>
-            <td style="padding:7px 12px;border-bottom:1px solid #e5e7eb;text-align:right;font-weight:600">₹${Number(v).toLocaleString('en-IN')}</td></tr>`).join('')
-    : `<tr><td style="padding:7px 12px;border-bottom:1px solid #e5e7eb">${r.feeType}</td>
-           <td style="padding:7px 12px;border-bottom:1px solid #e5e7eb;text-align:right;font-weight:600">₹${Number(r.amount).toLocaleString('en-IN')}</td></tr>`;
-  const total = r.feeBreakdown ? Object.values(r.feeBreakdown).reduce((a,v)=>a+v,0) : r.amount;
-
-  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
-  <title>Receipt #${r.receiptNo}</title>
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:Arial,sans-serif;background:#fff;color:#111;padding:20px}
-    .receipt{max-width:580px;margin:0 auto;border:2px solid #1e3a5f;border-radius:8px;overflow:hidden}
-    .header{background:#1e3a5f;color:white;text-align:center;padding:18px 16px}
-    .header h1{font-size:20px;font-weight:bold;margin-bottom:3px}
-    .header p{font-size:12px;opacity:.85}
-    .receipt-badge{background:#f59e0b;color:#000;text-align:center;padding:8px;font-size:13px;font-weight:bold;letter-spacing:.05em}
-    .body{padding:18px}
-    .row{display:flex;justify-content:space-between;margin-bottom:10px;font-size:13px}
-    .row .label{color:#6b7280;font-size:12px}
-    .row .val{font-weight:600;font-size:14px}
-    table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
-    thead th{background:#f3f4f6;padding:8px 12px;text-align:left;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:#6b7280}
-    .total-row td{padding:10px 12px;background:#1e3a5f;color:white;font-weight:bold;font-size:15px}
-    .total-row td:last-child{text-align:right}
-    .footer{border-top:2px dashed #e5e7eb;margin-top:18px;padding-top:16px;display:flex;justify-content:space-between;font-size:12px;color:#6b7280}
-    .sig{border-top:1px solid #9ca3af;padding-top:6px;margin-top:30px;font-size:11px;text-align:center}
-    .cut{text-align:center;padding:10px;font-size:11px;color:#9ca3af;border-top:2px dashed #d1d5db;border-bottom:2px dashed #d1d5db;margin:16px 0;letter-spacing:.05em}
-    @media print{body{padding:0}.no-print{display:none}html{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
-  </style></head><body>
-  <div class="no-print" style="text-align:center;margin-bottom:16px">
-    <button onclick="window.print()" style="padding:10px 28px;background:#1e3a5f;color:white;border:none;border-radius:8px;font-size:14px;font-weight:bold;cursor:pointer;margin-right:10px">🖨 Print Receipt</button>
-    <button onclick="window.close()" style="padding:10px 20px;background:#f3f4f6;border:1px solid #d1d5db;border-radius:8px;font-size:14px;cursor:pointer">✕ Close</button>
-  </div>
-  <!-- MAIN RECEIPT -->
-  <div class="receipt">
-    <div class="header">
-      <h1>B.N. CONVENT HIGHER SECONDARY SCHOOL</h1>
-      <p>Wadrafnagar, Balrampur – 497225 &nbsp;|&nbsp; Contact: 9826278578</p>
-    </div>
-    <div class="receipt-badge">FEE RECEIPT — SESSION 2025-26</div>
-    <div class="body">
-      <div class="row"><span><span class="label">Receipt No.</span><br><span class="val">#${r.receiptNo}</span></span>
-                       <span style="text-align:right"><span class="label">Date</span><br><span class="val">${r.date}</span></span></div>
-      <div class="row"><span><span class="label">Student Name</span><br><span class="val">${r.studentName}</span></span>
-                       <span style="text-align:right"><span class="label">Class</span><br><span class="val">${r.class||'—'}</span></span></div>
-      <div class="row"><span><span class="label">Father's Name</span><br><span class="val">${r.fatherName||'—'}</span></span>
-                       <span style="text-align:right"><span class="label">Payment Mode</span><br><span class="val">${r.payMode}</span></span></div>
-      <table>
-        <thead><tr><th>Fee Particulars</th><th style="text-align:right">Amount (₹)</th></tr></thead>
-        <tbody>${breakdown}</tbody>
-        <tr class="total-row"><td>TOTAL PAID</td><td>₹${Number(total).toLocaleString('en-IN')}</td></tr>
-      </table>
-      ${r.inWords?`<p style="font-size:12px;color:#374151;margin-bottom:8px"><strong>In Words:</strong> ${r.inWords}</p>`:''}
-      ${r.remarks?`<p style="font-size:12px;color:#374151"><strong>Remarks:</strong> ${r.remarks}</p>`:''}
-      <div class="footer">
-        <span>Received By: <strong>${r.receivedBy||'—'}</strong></span>
-        <span style="text-align:right">This is a computer-generated receipt</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;margin-top:24px">
-        <div class="sig" style="width:45%">Parent / Guardian Signature</div>
-        <div class="sig" style="width:45%">Authorised Signatory</div>
-      </div>
-    </div>
-  </div>
-  <!-- COUNTERFOIL -->
-  <div class="cut">✂ &nbsp; SCHOOL COPY — CUT HERE AND KEEP &nbsp; ✂</div>
-  <div class="receipt" style="border-color:#d1d5db">
-    <div class="header" style="background:#374151;padding:12px 16px">
-      <h1 style="font-size:15px">B.N. CONVENT H.S.S. — SCHOOL COPY</h1>
-      <p>Receipt #${r.receiptNo} &nbsp;|&nbsp; ${r.date}</p>
-    </div>
-    <div class="body" style="padding:14px">
-      <div class="row"><span class="label">Student</span><span class="val">${r.studentName} (Class ${r.class||'—'})</span></div>
-      <div class="row"><span class="label">Father</span><span class="val">${r.fatherName||'—'}</span></div>
-      <div class="row"><span class="label">Total Paid</span><span class="val" style="color:#1e3a5f;font-size:16px">₹${Number(total).toLocaleString('en-IN')}</span></div>
-      <div class="row"><span class="label">Mode</span><span class="val">${r.payMode}</span></div>
-    </div>
-  </div>
-  </body></html>`;
-
-  const win = window.open('','_blank','width=680,height=800');
-  win.document.write(html);
-  win.document.close();
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// FORM HELPERS
-// ═══════════════════════════════════════════════════════════════════
-function showFormMsg(id, type, text) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  const colors = { success:'rgba(16,185,129,.1)', error:'rgba(239,68,68,.1)' };
-  const borders = { success:'rgba(16,185,129,.3)', error:'rgba(239,68,68,.3)' };
-  const textC   = { success:'#6ee7b7', error:'#fca5a5' };
-  el.style.cssText=`display:block;padding:12px 16px;border-radius:10px;font-size:13px;background:${colors[type]};border:1px solid ${borders[type]};color:${textC[type]}`;
-  el.textContent = text;
-  if (type==='success') setTimeout(()=>{ el.style.display='none'; }, 5000);
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// REPORT CARD
-// ═══════════════════════════════════════════════════════════════════
-
-// CGBSE subject map by class group
-const CGBSE_SUBJECTS = {
-  primary: { // Class 1–5
-    label: 'Primary (Class 1–5)',
-    subjects: [
-      { name: 'Hindi',           max: 100, type: 'theory' },
-      { name: 'English',         max: 100, type: 'theory' },
-      { name: 'Mathematics',     max: 100, type: 'theory' },
-      { name: 'Environmental Studies (EVS)', max: 100, type: 'theory' },
-      { name: 'General Knowledge', max: 50, type: 'theory' },
-      { name: 'Drawing & Art',   max: 50,  type: 'practical' },
-    ]
-  },
-  middle: { // Class 6–8
-    label: 'Middle School (Class 6–8)',
-    subjects: [
-      { name: 'Hindi',           max: 100, type: 'theory' },
-      { name: 'English',         max: 100, type: 'theory' },
-      { name: 'Sanskrit / Urdu', max: 100, type: 'theory' },
-      { name: 'Mathematics',     max: 100, type: 'theory' },
-      { name: 'Science',         max: 100, type: 'theory' },
-      { name: 'Social Science',  max: 100, type: 'theory' },
-      { name: 'General Knowledge', max: 50, type: 'theory' },
-      { name: 'Drawing & Art',   max: 50,  type: 'practical' },
-      { name: 'Physical Education', max: 50, type: 'practical' },
-    ]
-  },
-  high: { // Class 9–10
-    label: 'High School (Class 9–10)',
-    subjects: [
-      { name: 'Hindi',           max: 100, type: 'theory', pass: 33 },
-      { name: 'English',         max: 100, type: 'theory', pass: 33 },
-      { name: 'Sanskrit / Urdu / 3rd Language', max: 100, type: 'theory', pass: 33 },
-      { name: 'Mathematics',     max: 100, type: 'theory', pass: 33 },
-      { name: 'Science',         max: 100, type: 'theory', pass: 33, practical: true },
-      { name: 'Social Science',  max: 100, type: 'theory', pass: 33 },
-      { name: 'Computer Science / Vocational', max: 100, type: 'theory', pass: 33, practical: true },
-    ]
-  },
-  higher: { // Class 11–12
-    label: 'Higher Secondary (Class 11–12)',
-    subjects: [
-      { name: 'Hindi / English (Compulsory)', max: 100, type: 'theory', pass: 33 },
-      { name: 'Subject 1 (Core)',   max: 100, type: 'theory', pass: 33, practical: true },
-      { name: 'Subject 2 (Core)',   max: 100, type: 'theory', pass: 33, practical: true },
-      { name: 'Subject 3 (Core)',   max: 100, type: 'theory', pass: 33, practical: true },
-      { name: 'Subject 4 (Elective)', max: 100, type: 'theory', pass: 33 },
-      { name: 'Physical Education / Vocational', max: 50, type: 'practical' },
-    ]
-  }
-};
-
-const EXAMS = [
-  { id: 'pq',  label: 'Pre-Quarterly Exam',    short: 'Pre-QT',  month: 'July–Aug',   color: '#06b6d4' },
-  { id: 'hy',  label: 'Half Yearly Exam',       short: 'Half-Yr', month: 'Oct–Nov',    color: '#f59e0b' },
-  { id: 'ann', label: 'Annual Exam',            short: 'Annual',  month: 'March–Apr',  color: '#10b981' },
-];
-
-// Mock marks generator (realistic — will be replaced by live API data)
-function mockMarks(studentName, cls, examId, subjName, maxMarks) {
-  // Deterministic fake marks based on name + subject + exam
-  const seed = (studentName+subjName+examId+cls).split('').reduce((a,c)=>a+c.charCodeAt(0),0);
-  const rng = (seed*9301+49297)%233280/233280;
-  const rng2 = ((seed*6364+1442695)%233280)/233280;
-  const absent = rng2 > 0.92; // 8% absent
-  if (absent) return null; // null = absent
-  const pct = 0.38 + rng * 0.57; // range 38%–95%
-  return Math.round(maxMarks * pct);
-}
-
-function getClassGroup(cls) {
-  const n = cls.replace(/[^0-9]/g,'');
-  if (!n) return 'primary'; // Nursery/LKG/UKG
-  const num = parseInt(n);
-  if (num <= 5)  return 'primary';
-  if (num <= 8)  return 'middle';
-  if (num <= 10) return 'high';
-  return 'higher';
-}
-
-function getGrade(marks, max) {
-  if (marks === null) return 'AB';
-  const pct = (marks / max) * 100;
-  if (pct >= 91) return 'O';
-  if (pct >= 71) return 'A';
-  if (pct >= 56) return 'B';
-  if (pct >= 41) return 'C';
-  if (pct >= 33) return 'D';
-  return 'F';
-}
-
-function getGradeLabel(g) {
-  return {O:'Outstanding',A:'Excellent',B:'Good',C:'Average',D:'Satisfactory',F:'Needs Improvement',AB:'Absent'}[g]||'';
-}
-
-let rcCurrentStudent = null;
-let rcCurrentExam = 'pq';
-let rcSearchQuery = '';
-
-function renderReportPage() {
-  const el = document.getElementById('page-report');
-  // Show exam tabs immediately, load data
-  el.innerHTML = `
-  <div class="rc-tabs" id="rc-exam-tabs">
-    ${EXAMS.map(e=>`<button class="rc-tab${e.id===rcCurrentExam?' active':''}" onclick="rcCurrentExam='${e.id}';renderReportPage()">${e.label} <span style="font-size:10px;color:var(--muted);margin-left:4px">${e.month}</span></button>`).join('')}
-  </div>
-  <div id="rc-result">${loader()}</div>`;
-  loadReportCard(CURRENT_USER, CURRENT_MOTHER);
-}
-
-async function loadReportCard(name, mother) {
-  const el = document.getElementById('rc-result');
-  if (!el) return;
-  el.innerHTML = loader();
-  try {
-    const d = await api({action:'getStudentHistory', query:name, mother:mother});
-    const students = d.students || [];
-    if (!students.length) {
-      el.innerHTML = `<div class="rc-na-box"><div class="rc-na-icon">🔍</div><p>No records found for <strong>${name}</strong>.<br>Please contact school office.</p></div>`;
-      return;
-    }
-    rcCurrentStudent = students[0];
-    renderReportCard();
-  } catch(e) {
-    el.innerHTML = errorBox(e.message);
-  }
-}
-
-async function searchReportCard() {
-  // kept for compat
-  const q = CURRENT_USER;
-  const m = CURRENT_MOTHER;
-  rcSearchQuery = q;
-  const el = document.getElementById('rc-result');
-  if (!el) return;
-  el.innerHTML = loader();
-  try {
-    const d = await api({action:'getStudentHistory', query:q, mother:m});
-    const students = d.students || [];
-    if (!students.length) {
-      el.innerHTML = `<div class="rc-na-box"><div class="rc-na-icon">🔍</div><p>No student found for "<strong>${q}</strong>".</p></div>`;
-      return;
-    }
-    rcCurrentStudent = students[0];
-    rcCurrentExam = rcCurrentExam || 'pq';
-    renderReportCard();
-  } catch(e) {
-    el.innerHTML = `<div class="rc-na-box"><div class="rc-na-icon">⚠️</div><p>Error loading data: ${e.message}</p></div>`;
-  }
-}
-
-function renderReportCard() {
-  const s = rcCurrentStudent;
-  if (!s) return;
-  const el = document.getElementById('rc-result');
-  const group = getClassGroup(s.class);
-  const subjectSet = CGBSE_SUBJECTS[group];
-  const exam = EXAMS.find(e=>e.id===rcCurrentExam);
-
-  // Build marks data
-  const rows = subjectSet.subjects.map(sub => {
-    const obtained = mockMarks(s.name, s.class, rcCurrentExam, sub.name, sub.max);
-    const grade = getGrade(obtained, sub.max);
-    const pass = sub.pass || Math.round(sub.max * 0.33);
-    const isPassed = obtained === null ? null : obtained >= pass;
-    return { ...sub, obtained, grade, isPassed, pass };
-  });
-
-  const attempted = rows.filter(r => r.obtained !== null);
-  const totalMax  = attempted.reduce((a,r) => a+r.max, 0);
-  const totalObt  = attempted.reduce((a,r) => a+r.obtained, 0);
-  const percentage = totalMax > 0 ? ((totalObt/totalMax)*100).toFixed(1) : 0;
-  const allPassed = attempted.length > 0 && attempted.every(r => r.isPassed);
-  const overallGrade = getGrade(totalObt, totalMax);
-
-  // Update tab highlights
-  document.querySelectorAll('.rc-tab').forEach(btn => {
-    btn.classList.toggle('active', btn.textContent.trim().startsWith(EXAMS.find(e=>e.id===rcCurrentExam)?.label.slice(0,4)||''));
-  });
-
-  el.innerHTML = `
-  <div class="rc-card">
-    <!-- Header -->
-    <div class="rc-header">
-      <div>
-        <div class="rc-school">B.N. Convent Higher Secondary School</div>
-        <div class="rc-school-sub">Wadrafnagar, Balrampur – 497225 &nbsp;·&nbsp; CGBSE Affiliated &nbsp;·&nbsp; Session 2025-26</div>
-      </div>
-      <div class="rc-exam-badge">${exam.label.toUpperCase()}</div>
-    </div>
-
-    <!-- Student Strip -->
-    <div class="rc-student-strip">
-      <div class="rc-sinfo"><div style="margin-bottom:2px">Student Name</div><strong>${s.name}</strong></div>
-      <div class="rc-sinfo"><div style="margin-bottom:2px">Father's Name</div><strong>${s.father||'—'}</strong></div>
-      <div class="rc-sinfo"><div style="margin-bottom:2px">Class</div><strong>${s.class}</strong></div>
-      <div class="rc-sinfo"><div style="margin-bottom:2px">Section</div><strong>A</strong></div>
-      <div class="rc-sinfo"><div style="margin-bottom:2px">Group</div><strong>${subjectSet.label}</strong></div>
-      <div class="rc-sinfo"><div style="margin-bottom:2px">Exam Month</div><strong>${exam.month}</strong></div>
-    </div>
-
-    <!-- Marks Table -->
-    <div class="rc-table-wrap">
-      <table class="rc-table">
-        <thead>
-          <tr>
-            <th style="width:36px">#</th>
-            <th>Subject</th>
-            <th class="center">Max Marks</th>
-            <th class="center">Pass Marks</th>
-            <th class="center">Marks Obtained</th>
-            <th class="center">%</th>
-            <th class="center">Grade</th>
-            <th class="center">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${rows.map((r,i)=>{
-            const pct = r.obtained!==null ? ((r.obtained/r.max)*100).toFixed(0) : '—';
-            const statusHtml = r.obtained===null
-              ? '<span style="font-size:11px;color:var(--muted)">Absent</span>'
-              : r.isPassed
-                ? '<span style="font-size:11px;color:var(--accent3);font-weight:700">✓ Pass</span>'
-                : '<span style="font-size:11px;color:var(--danger);font-weight:700">✗ Fail</span>';
-            return `<tr>
-              <td style="color:var(--muted);font-size:11px">${i+1}</td>
-              <td>
-                <div style="font-weight:500">${r.name}</div>
-                ${r.practical?'<div style="font-size:10px;color:var(--accent2);margin-top:2px">Includes Practical</div>':''}
-                <div style="font-size:10px;color:var(--muted);margin-top:2px;text-transform:capitalize">${r.type}</div>
-              </td>
-              <td class="center rc-marks">${r.max}</td>
-              <td class="center" style="font-size:12px;color:var(--muted)">${r.pass}</td>
-              <td class="center">
-                <span class="rc-marks ${r.obtained===null?'absent':r.isPassed?'pass':'fail'}">
-                  ${r.obtained===null?'AB':r.obtained}
-                </span>
-              </td>
-              <td class="center" style="font-size:12px;color:var(--muted)">${pct}${pct!=='—'?'%':''}</td>
-              <td class="center"><span class="grade-pill grade-${r.grade}">${r.grade}</span></td>
-              <td class="center">${statusHtml}</td>
-            </tr>`;
-          }).join('')}
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Summary Row -->
-    <div class="rc-summary">
-      <div class="rc-sum-item">
-        <div class="rc-sum-val">${totalObt} / ${totalMax}</div>
-        <div class="rc-sum-lbl">Total Marks</div>
-      </div>
-      <div class="rc-sum-item">
-        <div class="rc-sum-val">${percentage}%</div>
-        <div class="rc-sum-lbl">Percentage</div>
-      </div>
-      <div class="rc-sum-item">
-        <div class="rc-sum-val"><span class="grade-pill grade-${overallGrade}" style="font-size:15px;padding:4px 12px">${overallGrade}</span></div>
-        <div class="rc-sum-lbl">Overall Grade</div>
-      </div>
-      <div class="rc-sum-item">
-        <div style="margin-bottom:4px"><span class="rc-result-badge ${attempted.length===0?'na':allPassed?'pass':'fail'}">${attempted.length===0?'N/A':allPassed?'✓ PASSED':'✗ FAILED'}</span></div>
-        <div class="rc-sum-lbl">Result</div>
-      </div>
-      <div class="rc-sum-item">
-        <div class="rc-sum-val">${rows.filter(r=>r.obtained===null).length}</div>
-        <div class="rc-sum-lbl">Absent</div>
-      </div>
-      <div class="rc-sum-item" style="margin-left:auto">
-        <div style="font-size:11px;color:var(--muted);line-height:1.9;text-align:right">
-          <strong style="color:var(--text)">Grade Scale (CGBSE)</strong><br>
-          O ≥91% &nbsp; A ≥71% &nbsp; B ≥56%<br>C ≥41% &nbsp; D ≥33% &nbsp; F &lt;33%
-        </div>
-      </div>
-    </div>
-
-    <!-- Print Button -->
-    <div class="rc-print-btn">
-      <button onclick="printReportCard()" class="form-btn blue" style="font-size:12px;padding:9px 18px">🖨 Print Report Card</button>
-      <button onclick="showPage('history')" class="form-btn secondary" style="font-size:12px;padding:9px 18px">📄 View Fee History</button>
-    </div>
-  </div>
-
-  <!-- Data Notice -->
-  <div class="rc-coming-soon">
-    <div class="cs-icon">🔗</div>
-    <h3>Live Marks Coming Soon</h3>
-    <p>Above marks are <strong>sample/demo data</strong> for layout preview only.<br>
-    Once the school uploads result data to Google Sheets, real marks will appear here automatically.<br><br>
-    <span style="color:var(--accent2)">Sheet required: <strong>"Exam Results"</strong> with columns:<br>
-    Student Name | Class | Exam | Subject | Marks Obtained | Max Marks</span></p>
-  </div>`;
-}
-
-function printReportCard() {
-  const s = rcCurrentStudent;
-  if (!s) return;
-  const group = getClassGroup(s.class);
-  const subjectSet = CGBSE_SUBJECTS[group];
-  const exam = EXAMS.find(e=>e.id===rcCurrentExam);
-
-  const rows = subjectSet.subjects.map(sub => {
-    const obtained = mockMarks(s.name, s.class, rcCurrentExam, sub.name, sub.max);
-    const grade = getGrade(obtained, sub.max);
-    const pass = sub.pass || Math.round(sub.max * 0.33);
-    const isPassed = obtained === null ? null : obtained >= pass;
-    return { ...sub, obtained, grade, isPassed, pass };
-  });
-
-  const attempted = rows.filter(r=>r.obtained!==null);
-  const totalMax  = attempted.reduce((a,r)=>a+r.max,0);
-  const totalObt  = attempted.reduce((a,r)=>a+r.obtained,0);
-  const pct = totalMax>0?((totalObt/totalMax)*100).toFixed(1):0;
-  const allPassed = attempted.length>0 && attempted.every(r=>r.isPassed);
-  const oGrade = getGrade(totalObt,totalMax);
-
-  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Report Card – ${s.name}</title>
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:Arial,sans-serif;color:#111;background:#fff;padding:20px}
-    .wrap{max-width:720px;margin:0 auto}
-    .header{background:#1e3a5f;color:white;padding:18px 20px;text-align:center;border-radius:8px 8px 0 0}
-    .header h1{font-size:18px;font-weight:bold;margin-bottom:4px}
-    .header p{font-size:11px;opacity:.8}
-    .exam-badge{background:#f59e0b;color:#000;text-align:center;padding:7px;font-size:13px;font-weight:bold;letter-spacing:.05em}
-    .sstrip{display:flex;flex-wrap:wrap;gap:0;border:1px solid #e5e7eb;border-top:none}
-    .sfield{flex:1 1 30%;padding:8px 14px;border-right:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;min-width:120px}
-    .sfield .lbl{font-size:10px;color:#6b7280;text-transform:uppercase;letter-spacing:.06em}
-    .sfield .val{font-size:13px;font-weight:700;margin-top:2px}
-    table{width:100%;border-collapse:collapse;font-size:12px;margin-top:14px}
-    th{background:#f3f4f6;padding:8px 10px;text-align:center;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#6b7280;border:1px solid #e5e7eb}
-    th:first-child,th:nth-child(2){text-align:left}
-    td{padding:8px 10px;border:1px solid #e5e7eb;text-align:center}
-    td:first-child,td:nth-child(2){text-align:left}
-    .pass{color:#059669;font-weight:700}
-    .fail{color:#dc2626;font-weight:700}
-    .absent{color:#9ca3af}
-    .summary{margin-top:14px;display:flex;gap:0;border:2px solid #1e3a5f;border-radius:8px;overflow:hidden}
-    .sum-item{flex:1;padding:12px;text-align:center;border-right:1px solid #e5e7eb}
-    .sum-item:last-child{border-right:none}
-    .sum-val{font-size:17px;font-weight:bold;color:#1e3a5f}
-    .sum-lbl{font-size:9px;color:#6b7280;text-transform:uppercase;margin-top:3px;letter-spacing:.06em}
-    .result-pass{background:#d1fae5;color:#059669;font-weight:bold}
-    .result-fail{background:#fee2e2;color:#dc2626;font-weight:bold}
-    .sigs{display:flex;justify-content:space-between;margin-top:40px;padding-top:10px;border-top:1px solid #e5e7eb;font-size:11px;color:#6b7280}
-    .sig-line{border-top:1px solid #9ca3af;padding-top:5px;margin-top:28px;text-align:center;width:160px}
-    .no-print{text-align:center;margin-bottom:16px}
-    @media print{.no-print{display:none}html{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
-  </style></head><body>
-  <div class="no-print">
-    <button onclick="window.print()" style="padding:10px 28px;background:#1e3a5f;color:white;border:none;border-radius:8px;font-size:14px;font-weight:bold;cursor:pointer;margin-right:8px">🖨 Print</button>
-    <button onclick="window.close()" style="padding:10px 16px;background:#f3f4f6;border:1px solid #d1d5db;border-radius:8px;font-size:14px;cursor:pointer">✕ Close</button>
-  </div>
-  <div class="wrap">
-    <div class="header">
-      <h1>B.N. CONVENT HIGHER SECONDARY SCHOOL</h1>
-      <p>Wadrafnagar, Balrampur – 497225 &nbsp;|&nbsp; Contact: 9826278578 &nbsp;|&nbsp; CGBSE Affiliated</p>
-    </div>
-    <div class="exam-badge">${exam.label.toUpperCase()} — SESSION 2025-26</div>
-    <div class="sstrip">
-      <div class="sfield"><div class="lbl">Student Name</div><div class="val">${s.name}</div></div>
-      <div class="sfield"><div class="lbl">Father's Name</div><div class="val">${s.father||'—'}</div></div>
-      <div class="sfield"><div class="lbl">Class</div><div class="val">${s.class}</div></div>
-      <div class="sfield"><div class="lbl">Section</div><div class="val">A</div></div>
-      <div class="sfield"><div class="lbl">Exam Month</div><div class="val">${exam.month}</div></div>
-      <div class="sfield"><div class="lbl">Date of Report</div><div class="val">${new Date().toLocaleDateString('en-IN')}</div></div>
-    </div>
-    <table>
-      <thead><tr><th>#</th><th>Subject</th><th>Max</th><th>Pass</th><th>Obtained</th><th>%</th><th>Grade</th><th>Status</th></tr></thead>
-      <tbody>
-        ${rows.map((r,i)=>`<tr>
-          <td>${i+1}</td>
-          <td>${r.name}</td>
-          <td>${r.max}</td>
-          <td>${r.pass}</td>
-          <td class="${r.obtained===null?'absent':r.isPassed?'pass':'fail'}">${r.obtained===null?'AB':r.obtained}</td>
-          <td>${r.obtained!==null?((r.obtained/r.max)*100).toFixed(0)+'%':'—'}</td>
-          <td><strong>${r.grade}</strong></td>
-          <td class="${r.obtained===null?'absent':r.isPassed?'pass':'fail'}">${r.obtained===null?'Absent':r.isPassed?'Pass':'Fail'}</td>
-        </tr>`).join('')}
-      </tbody>
-    </table>
-    <div class="summary">
-      <div class="sum-item"><div class="sum-val">${totalObt}/${totalMax}</div><div class="sum-lbl">Total Marks</div></div>
-      <div class="sum-item"><div class="sum-val">${pct}%</div><div class="sum-lbl">Percentage</div></div>
-      <div class="sum-item"><div class="sum-val">${oGrade}</div><div class="sum-lbl">Grade</div></div>
-      <div class="sum-item ${allPassed?'result-pass':'result-fail'}"><div class="sum-val">${allPassed?'PASS':'FAIL'}</div><div class="sum-lbl">Result</div></div>
-      <div class="sum-item"><div class="sum-val">${rows.filter(r=>r.obtained===null).length}</div><div class="sum-lbl">Absent</div></div>
-    </div>
-    <div style="margin-top:12px;font-size:10px;color:#6b7280;text-align:center">
-      Grade Scale: O (≥91%) · A (≥71%) · B (≥56%) · C (≥41%) · D (≥33%) · F (&lt;33%)
-    </div>
-    <div class="sigs">
-      <div class="sig-line">Class Teacher</div>
-      <div class="sig-line">Parent / Guardian</div>
-      <div class="sig-line">Principal</div>
-    </div>
-    <div style="margin-top:18px;font-size:10px;color:#9ca3af;text-align:center;font-style:italic">
-      * Demo data shown for layout. Real marks will display once uploaded to school records.
-    </div>
-  </div>
-  </body></html>`;
-  const win = window.open('','_blank','width=760,height=900');
-  win.document.write(html); win.document.close();
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// ═══════════════════════════════════════════════════════════════════
-// ONLINE PAYMENT PAGE
-// ═══════════════════════════════════════════════════════════════════
-// School UPI ID — change this to actual UPI ID
-const SCHOOL_UPI_ID  = 'bnconventwadrafnagar@upi';
-const SCHOOL_UPI_NAME = 'BN Convent School';
-
-// Fee structure per class (for due calculator)
-const FEE_STRUCTURE = {
-  'Nursery': { admission:1500, tuition:0,    school:3000,  hostel:0     },
-  'LKG':     { admission:1500, tuition:0,    school:3000,  hostel:0     },
-  'UKG':     { admission:1500, tuition:0,    school:3000,  hostel:0     },
-  '1st':     { admission:2000, tuition:2000, school:5000,  hostel:0     },
-  '2nd':     { admission:2000, tuition:2000, school:5000,  hostel:0     },
-  '3rd':     { admission:2000, tuition:2000, school:5000,  hostel:0     },
-  '4th':     { admission:2000, tuition:2000, school:5000,  hostel:0     },
-  '5th':     { admission:2000, tuition:3000, school:6000,  hostel:0     },
-  '6th':     { admission:2500, tuition:3000, school:7000,  hostel:20000 },
-  '7th':     { admission:2500, tuition:3000, school:7000,  hostel:20000 },
-  '8th':     { admission:2500, tuition:3000, school:7000,  hostel:20000 },
-  '9th':     { admission:3000, tuition:4000, school:8000,  hostel:20000 },
-  '10th':    { admission:3000, tuition:4000, school:8000,  hostel:20000 },
-  '11th':    { admission:3500, tuition:5000, school:10000, hostel:20000 },
-  '12th':    { admission:3500, tuition:5000, school:10000, hostel:20000 },
-};
-
-function renderPaymentPage() {
-  const el = document.getElementById('page-payment');
-  el.innerHTML = `<div style="max-width:700px;margin:0 auto">${loader()}</div>`;
-  // Load student data first to show personalised dues
-  loadPaymentPage();
-}
-
-async function loadPaymentPage() {
-  const el = document.getElementById('page-payment');
-  let student = null;
-  try {
-    const d = await api({action:'getStudentHistory', query:CURRENT_USER, mother:CURRENT_MOTHER});
-    student = (d.students||[])[0] || null;
-  } catch(e) { /* silent — show generic */ }
-
-  const cls = student?.class || '';
-  const fee = FEE_STRUCTURE[cls] || {};
-  const paid = student || {admission:0,tuition:0,school:0,hostel:0};
-
-  const dueAdm = Math.max(0, (fee.admission||0) - (paid.admission||0));
-  const dueTui = Math.max(0, (fee.tuition||0)   - (paid.tuition||0));
-  const dueSch = Math.max(0, (fee.school||0)     - (paid.school||0));
-  const dueHos = student?.hasHostel ? Math.max(0,(fee.hostel||0)-(paid.hostel||0)) : 0;
-  const totalDue = dueAdm + dueTui + dueSch + dueHos;
-
-  // Build UPI deep-link
-  const upiLink = `upi://pay?pa=${SCHOOL_UPI_ID}&pn=${encodeURIComponent(SCHOOL_UPI_NAME)}&am=${totalDue}&cu=INR&tn=${encodeURIComponent('Fee: '+CURRENT_USER+' Cl.'+cls)}`;
-  const phonepeLink = `phonepe://pay?pa=${SCHOOL_UPI_ID}&pn=${encodeURIComponent(SCHOOL_UPI_NAME)}&am=${totalDue}&cu=INR`;
-  const gpayLink   = `tez://upi/pay?pa=${SCHOOL_UPI_ID}&pn=${encodeURIComponent(SCHOOL_UPI_NAME)}&am=${totalDue}&cu=INR`;
-
-  el.innerHTML = `
-  <div style="max-width:700px;margin:0 auto">
-    <div class="shdr" style="margin-bottom:20px">
-      <div>
-        <div class="stitle">💳 Pay Fee Online</div>
-        <div class="ssub">Pay school fees instantly via UPI · Session 2025-26</div>
-      </div>
-    </div>
-
-    ${student ? `
-    <!-- Fee Due Summary -->
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:20px">
-      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border)">
-        📊 Fee Summary — ${student.name} · Class ${cls}
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:18px">
-        ${[
-          ['Admission Fee', fee.admission||0, paid.admission||0, dueAdm, '#f59e0b'],
-          ['Tuition Fee',   fee.tuition||0,   paid.tuition||0,   dueTui, '#06b6d4'],
-          ['School Fee',    fee.school||0,    paid.school||0,    dueSch, '#10b981'],
-          ...(student.hasHostel?[['Hostel Fee', fee.hostel||0, paid.hostel||0, dueHos, '#8b5cf6']]:[])
-        ].map(([label,total,paidAmt,due,color])=>`
-          <div style="background:var(--subtle);border-radius:12px;padding:14px">
-            <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px">${label}</div>
-            <div style="font-size:11px;color:var(--muted);margin-bottom:2px">Total: ₹${fmt(total)}</div>
-            <div style="font-size:11px;color:var(--accent3);margin-bottom:2px">Paid: ₹${fmt(paidAmt)}</div>
-            <div style="font-size:14px;font-weight:700;color:${due>0?'var(--danger)':'var(--accent3)'}">
-              ${due>0?'Due: ₹'+fmt(due):'✓ Paid'}
-            </div>
-          </div>`).join('')}
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;background:${totalDue>0?'rgba(239,68,68,.08)':'rgba(16,185,129,.08)'};border:1px solid ${totalDue>0?'rgba(239,68,68,.2)':'rgba(16,185,129,.2)'};border-radius:10px;padding:14px 18px">
-        <span style="font-size:14px;font-weight:600;color:var(--text)">Total Fee Due</span>
-        <span style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:${totalDue>0?'var(--danger)':'var(--accent3)'}">
-          ${totalDue>0?'₹'+fmt(totalDue):'✓ All Clear'}
-        </span>
-      </div>
-    </div>` : ''}
-
-    <!-- UPI Payment Box -->
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:26px;margin-bottom:20px;text-align:center">
-      <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:20px">Pay via UPI</div>
-
-      <!-- QR Code using Google Charts API -->
-      <div style="background:white;padding:16px;border-radius:12px;display:inline-block;margin-bottom:18px;box-shadow:0 4px 20px rgba(0,0,0,.3)">
-        <img src="https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${encodeURIComponent(upiLink)}&choe=UTF-8"
-          alt="UPI QR Code" width="200" height="200" style="display:block;border-radius:4px"
-          onerror="this.parentElement.innerHTML='<div style=\'width:200px;height:200px;display:flex;align-items:center;justify-content:center;background:#f3f4f6;border-radius:8px;font-size:12px;color:#6b7280;text-align:center;padding:20px\'>QR unavailable offline</div>'"/>
-      </div>
-
-      <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Scan with any UPI app</div>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--accent2);margin-bottom:20px;padding:8px 16px;background:rgba(6,182,212,.08);border-radius:8px;display:inline-block">
-        ${SCHOOL_UPI_ID}
-      </div>
-
-      <!-- App buttons -->
-      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:18px">
-        <a href="${phonepeLink}" style="text-decoration:none">
-          <div style="background:#5f259f;color:white;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px">
-            📱 PhonePe
-          </div>
-        </a>
-        <a href="${gpayLink}" style="text-decoration:none">
-          <div style="background:#1a73e8;color:white;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px">
-            💙 Google Pay
-          </div>
-        </a>
-        <a href="${upiLink}" style="text-decoration:none">
-          <div style="background:var(--accent3);color:#000;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px">
-            ₹ Any UPI App
-          </div>
-        </a>
-      </div>
-
-      <div style="font-size:11px;color:var(--muted);line-height:1.8;max-width:420px;margin:0 auto;padding:12px;background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.15);border-radius:8px">
-        ⚠️ <strong>Important:</strong> After payment, bring your transaction ID to the school office<br>
-        for receipt generation. Online payment confirmation takes 1–2 working days.
-      </div>
-    </div>
-
-    <!-- Bank Details -->
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px">
-      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border)">
-        🏦 Bank Transfer Details
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
-        ${[
-          ['Bank Name','Chhattisgarh Rajya Gramin Bank (CRGB)'],
-          ['Account Name','BN Convent Higher Secondary School'],
-          ['Account No.','XXXXXXXXXXXX'],
-          ['IFSC Code','CRGB0XXXXXX'],
-          ['Branch','Wadrafnagar, Balrampur'],
-          ['Contact','9826278578'],
-        ].map(([label,val])=>`
-          <div style="background:var(--subtle);border-radius:10px;padding:12px">
-            <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">${label}</div>
-            <div style="font-size:13px;font-weight:600;color:var(--text)">${val}</div>
-          </div>`).join('')}
-      </div>
-    </div>
-  </div>`;
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// NOTICES PAGE
-// ═══════════════════════════════════════════════════════════════════
-const SCHOOL_NOTICES = [
-  {
-    id:1, type:'urgent', icon:'🔔', date:'2026-03-10',
-    title:'Annual Exam Schedule Released',
-    body:'Annual examinations will commence from 15th March 2026. All students must carry their admit cards. Exam hall will open at 9:00 AM. Students reaching after 9:30 AM will not be allowed.',
-  },
-  {
-    id:2, type:'fee', icon:'💰', date:'2026-03-05',
-    title:'Last Date for Fee Submission — 31st March',
-    body:'All pending fees for session 2025-26 must be cleared by 31st March 2026. Students with outstanding dues will not receive mark sheets. Pay online or visit the school office.',
-  },
-  {
-    id:3, type:'holiday', icon:'🎉', date:'2026-03-01',
-    title:'Holi Holiday — 14th March 2026',
-    body:'The school will remain closed on 14th March 2026 (Holi). Classes will resume on 16th March 2026 (Monday). Students with pending practicals should contact their subject teacher.',
-  },
-  {
-    id:4, type:'general', icon:'📚', date:'2026-02-20',
-    title:'Admit Cards for Class 10 & 12 CGBSE Exam',
-    body:'CGBSE board exam admit cards for Class 10 and Class 12 students are available at the school office. Parents must collect them with ID proof. Last date to collect: 10th March 2026.',
-  },
-  {
-    id:5, type:'general', icon:'🏅', date:'2026-02-15',
-    title:'Annual Sports Day — 20th March 2026',
-    body:'Annual Sports Day will be held on 20th March 2026 at 10:00 AM on the school ground. Parents are cordially invited. Students participating must submit their event forms by 15th March.',
-  },
-  {
-    id:6, type:'general', icon:'📝', date:'2026-01-10',
-    title:'New Session 2026-27 Admissions Open',
-    body:'Admissions for session 2026-27 are now open for Nursery to Class 12. Admission forms available at school office from 9 AM – 2 PM on all working days. Limited seats available.',
-  },
-];
-
-const NOTICE_COLORS = {
-  urgent:  { bg:'rgba(239,68,68,.08)',  border:'rgba(239,68,68,.2)',  badge:'var(--danger)',   label:'Urgent'  },
-  fee:     { bg:'rgba(245,158,11,.08)', border:'rgba(245,158,11,.2)', badge:'var(--accent)',   label:'Fee'     },
-  holiday: { bg:'rgba(16,185,129,.08)', border:'rgba(16,185,129,.2)', badge:'var(--accent3)',  label:'Holiday' },
-  general: { bg:'rgba(6,182,212,.06)',  border:'rgba(6,182,212,.18)', badge:'var(--accent2)',  label:'General' },
-};
-
-function renderNoticesPage() {
-  const el = document.getElementById('page-notices');
-  el.innerHTML = `
-  <div style="max-width:700px;margin:0 auto">
-    <div class="shdr" style="margin-bottom:20px">
-      <div>
-        <div class="stitle">📢 School Notices</div>
-        <div class="ssub">Latest announcements — Session 2025-26</div>
-      </div>
-      <div style="font-size:11px;color:var(--muted);background:var(--subtle);padding:5px 12px;border-radius:20px">
-        ${SCHOOL_NOTICES.length} notices
-      </div>
-    </div>
-
-    ${SCHOOL_NOTICES.map(n => {
-      const col = NOTICE_COLORS[n.type] || NOTICE_COLORS.general;
-      const dateStr = new Date(n.date).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
-      return `
-      <div style="background:${col.bg};border:1px solid ${col.border};border-radius:14px;padding:20px;margin-bottom:14px;transition:transform .2s" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
-        <div style="display:flex;align-items:flex-start;gap:14px">
-          <div style="font-size:26px;flex-shrink:0;margin-top:2px">${n.icon}</div>
-          <div style="flex:1">
-            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
-              <span style="font-size:15px;font-weight:700;color:var(--text);font-family:'DM Serif Display',serif">${n.title}</span>
-              <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:2px 8px;border-radius:4px;background:${col.border};color:${col.badge}">${col.label}</span>
-            </div>
-            <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:10px">${n.body}</div>
-            <div style="font-size:11px;color:var(--muted)">📅 ${dateStr}</div>
-          </div>
-        </div>
-      </div>`;
-    }).join('')}
-
-    <div style="text-align:center;padding:20px;font-size:12px;color:var(--muted)">
-      For more information contact school office: <strong style="color:var(--text)">9826278578</strong>
-    </div>
-  </div>`;
-}
-// UTILS
-// ═══════════════════════════════════════════════════════════════════
-function fmt(n){return Number(n).toLocaleString('en-IN')}
-function loader(){return `<div class="loader"><div class="spinner"></div>Loading…</div>`}
-function errorBox(msg){return `<div class="loader" style="color:var(--danger)">⚠️ ${msg}</div>`}
-function kpi(icon,label,value,sub,cls,money){
-  return `<div class="kpi-card ${cls}"><div class="kpi-icon">${icon}</div><div class="kpi-label">${label}</div><div class="kpi-value ${money?'money':''}">${value}</div><div class="kpi-sub">${sub}</div></div>`;
-}
-function feeColor(k){return {'Hostel Fee':'#8b5cf6','School Fee':'#10b981','Admission Fee':'#f59e0b','Tuition Fee':'#06b6d4'}[k]||'#94a3b8'}
-function classOrd(a,b){const o={'Nursery':0,'LKG':1,'UKG':2,'1st':3,'2nd':4,'3rd':5,'4th':6,'5th':7,'6th':8,'7th':9,'8th':10,'9th':11,'10th':12,'11th':13,'12th':14};return (o[a]??99)-(o[b]??99)}
-
-const timers={};
-function debounce(fn,ms){return function(){clearTimeout(timers[fn]);timers[fn]=setTimeout(fn,ms);}}
-</script>
+<!-- LOAD MODULES -->
+<script src="app-core.js"></script>
+<script src="app-admin.js"></script>
+<script src="app-student.js"></script>
 </body>
 </html>
